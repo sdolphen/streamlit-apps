@@ -1,25 +1,3 @@
-"""
-Streamlit Cheat Sheet
-
-App to summarise streamlit docs v1.25.0
-
-There is also an accompanying png and pdf version
-
-https://github.com/daniellewisDL/streamlit-cheat-sheet
-
-v1.25.0
-20 August 2023
-
-Author:
-    @daniellewisDL : https://github.com/daniellewisDL
-
-Contributors:
-    @arnaudmiribel : https://github.com/arnaudmiribel
-    @akrolsmir : https://github.com/akrolsmir
-    @nathancarter : https://github.com/nathancarter
-
-"""
-
 import streamlit as st
 from pathlib import Path
 import base64
@@ -50,15 +28,13 @@ def img_to_bytes(img_path):
 def cs_sidebar():
 
     st.sidebar.markdown('''[<img src='data:image/png;base64,{}' class='img-fluid' width=32 height=32>](https://streamlit.io/)'''.format(img_to_bytes("dataroots-logo.png")), unsafe_allow_html=True)
-    st.sidebar.header('Streamlit cheat sheet')
+    st.sidebar.header('Career path')
 
-    st.sidebar.markdown('''
-<small>Summary of the [docs](https://docs.streamlit.io/), as of [Streamlit v1.25.0](https://www.streamlit.io/).</small>
-    ''', unsafe_allow_html=True)
+    st.sidebar.markdown(''' Explore career path insights here ''', unsafe_allow_html=True)
 
-    st.sidebar.markdown('__Install and import__')
+    st.sidebar.markdown('__Line1__')
 
-    st.sidebar.code('$ pip install streamlit')
+    st.sidebar.code('text 1')
 
     st.sidebar.code('''
 # Import convention
