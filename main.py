@@ -27,7 +27,7 @@ def img_to_bytes(img_path):
 
 def cs_sidebar():
 
-    st.sidebar.markdown('''[<img src='data:image/png;base64,{}' class='img-fluid' width=32 height=32>](https://streamlit.io/)'''.format(img_to_bytes("dataroots-logo.png")), unsafe_allow_html=True)
+    st.sidebar.markdown('''[<img src='data:image/png;base64,{}' class='img-fluid' width=132 height=32>](https://streamlit.io/)'''.format(img_to_bytes("dataroots-logo.png")), unsafe_allow_html=True)
     st.sidebar.header('Career path')
 
     st.sidebar.markdown(''' Explore career path insights here ''', unsafe_allow_html=True)
