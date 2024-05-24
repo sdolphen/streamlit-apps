@@ -107,7 +107,6 @@ This personalized feedback is aimed at helping you upgrade your total level and 
 ## APPLICATION FOR INPUT/OUTPUT 
 
 
-
 import streamlit as st
 import pandas as pd
 import subprocess
@@ -171,38 +170,6 @@ def get_level_and_values(columns):
     return level, non_empty_cells
 
 
-st.title("Data Career Path Level Up")
-
-# File uploader
-file = st.file_uploader("Upload Excel file", type=['xlsx'])
-
-if file is not None:
-    try:
-        # Load Excel data
-        df = pd.read_excel(file)
-
-        # Select only the columns of interest
-        ae_columns = df.filter(like='AE', axis=1)
-        ds_columns = df.filter(like='DS', axis=1)
-
-        # Get level and non-empty cells for AE and DS columns
-        ae_level, ae_values = get_level_and_values(ae_columns)
-        ds_level, ds_values = get_level_and_values(ds_columns)
-
-        # Display results
-        st.subheader("Results for AE")
-        st.write(f"Level: {ae_level}")
-        st.write("Non-empty cells:")
-        for value in ae_values:
-            st.write(value)
-
-        st.subheader("Results for DS")
-        st.write(f"Level: {ds_level}")
-        st.write("Non-empty cells:")
-        for value in ds_values:
-            st.write(value)
-    except Exception as e:
-        st.error(f"An error occurred: {e}")
 
 
 
