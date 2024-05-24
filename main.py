@@ -131,7 +131,7 @@ if file is not None:
 
 def cs_body():
 
-    col1, col2 = st.columns(2)
+    col1 = st.columns(1 )
 
     #######################################
     # COLUMN 1
@@ -157,23 +157,6 @@ Select Your Career Path: Choose your desired career path from a list of options,
 
 Get Tailored Feedback: Based on your inputs, our application analyzes the data and provides you with a detailed report highlighting the specific areas you need to improve on. 
 This personalized feedback is aimed at helping you upgrade your total level and achieve your career goals efficiently.''')
-
-    #######################################
-    # COLUMN 2
-    #######################################
-
-    # Optimize performance
-
-    col2.subheader('Optimize performance')
-    col2.write('write instead of markdown is also an option, maybe the best one?')
-    col2.code('''
-    you can also add some code below to combine both, maybe to display 
-    the results this way?
-    ''')
-    
-
-
-    return None
 
 
 # Run main()
