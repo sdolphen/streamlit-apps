@@ -74,7 +74,7 @@ def cs_body():
     one who provides excellent services to our clients and works closely with other colleagues.
     ''')
 
-    col2.code('''Navigating the data career landscape can be challenging, with numerous specializations and skill sets required to advance. Our innovative application is designed to help you
+    col1.code('''Navigating the data career landscape can be challenging, with numerous specializations and skill sets required to advance. Our innovative application is designed to help you
      identify the key areas you need to focus on to level up in your chosen data career path.
 
 How It Works
@@ -101,6 +101,55 @@ This personalized feedback is aimed at helping you upgrade your total level and 
 
 
     return None
+
+
+## APPLICATION FOR INPUT/OUTPUT 
+
+import streamlit as st
+import pandas as pd
+
+# Function to load Excel data
+@st.cache
+def load_excel_data(file_path):
+    xls = pd.ExcelFile(file_path)
+    sheet1 = pd.read_excel(xls, 'Sheet1')  # assuming data is in 'Sheet1'
+    return sheet1
+
+# Function to save the modified Excel data
+def save_excel_data(file_path, df):
+    with pd.ExcelWriter(file_path, engine='openpyxl') as writer:
+        df.to_excel(writer, index=False, sheet_name='Sheet1')
+
+# Load Excel data
+excel_file = 'data.xlsx'  # path to your Excel file
+df = load_excel_data(excel_file)
+
+st.title("Data Career Path Level Up")
+
+# Display the data and take inputs
+st.header("Input Parameters from Excel")
+input_data = df['Input Column'].values.tolist()  # assuming column name is 'Input Column'
+new_input_data = []
+
+for i, val in enumerate(input_data):
+    new_val = st.number_input(f'Input {i+1}', value=val, min_value=0, max_value=5)
+    new_input_data.append(new_val)
+
+# Update the DataFrame with new input values
+df['Input Column'] = new_input_data
+
+# Process the data and calculate results (example logic, replace with actual logic)
+st.header("Processed Results")
+df['Result Column'] = df['Input Column'] * 2  # replace with actual calculation
+
+# Display the results
+st.dataframe(df)
+
+# Save the updated data to a new Excel file
+if st.button('Save Results'):
+    save_excel_data('updated_data.xlsx', df)
+    st.success('Results saved to updated_data.xlsx')
+
 
 # Run main()
 
