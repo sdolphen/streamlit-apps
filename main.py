@@ -123,20 +123,20 @@ if file is not None:
         # Display results based on the selected domain
         if selected_domain == 'AE':
             st.subheader("On which domains do you need to improve to level up for the AE track?")
-            st.write(f"Level: {ae_level}")
-            st.write("Non-empty cells:")
+            st.write(f"My current level: {ae_level}")
+            st.write("The following areas you should try to improve to level up again!:")
             for value in ae_values:
                 st.write(value)
         elif selected_domain == 'DS':
             st.subheader("On which domains do you need to improve to level up for the DS track")
-            st.write(f"Level: {ds_level}")
-            st.write("Non-empty cells:")
+            st.write(f"My current level: {ds_level}")
+            st.write("The following areas you should try to improve to level up again:")
             for value in ds_values:
                 st.write(value)
         elif selected_domain == 'AT':
             st.subheader("On which domains do you need to improve to level up for the AT track")
-            st.write(f"Current level: {at_level}")
-            st.write("Non-empty cells:")
+            st.write(f"My current level: {at_level}")
+            st.write("The following areas you should try to improve to level up again:")
             for value in at_values:
                 st.write(value)
     except Exception as e:
