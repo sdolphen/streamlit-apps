@@ -104,76 +104,64 @@ This personalized feedback is aimed at helping you upgrade your total level and 
 
 
 ## APPLICATION FOR INPUT/OUTPUT 
-
 import streamlit as st
 import pandas as pd
 
-# Function to load Excel data from multiple sheets
+# Function to load Excel data from a single sheet
 @st.cache
 def load_excel_data(file_path):
     xls = pd.ExcelFile(file_path)
-    sheet1 = pd.read_excel(xls, 'Sheet1')  # Adjust sheet names as necessary
-    sheet2 = pd.read_excel(xls, 'Sheet2')
-    return sheet1, sheet2
+    df = pd.read_excel(xls, 'Sheet1')  # Adjust sheet name as necessary
+    return df
 
-# Function to save the modified Excel data to multiple sheets
-def save_excel_data(file_path, df1, df2):
-    with pd.ExcelWriter(file_path, engine='openpyxl') as writer:
-        df1.to_excel(writer, index=False, sheet_name='Sheet1')
-        df2.to_excel(writer, index=False, sheet_name='Sheet2')
+# Function to check if a column is fully completed (i.e., all cells are empty)
+def is_column_completed(column):
+    return column.isna().all()
+
+# Function to get the level and non-empty cells for a group of columns
+def get_level_and_values(columns):
+    level = 0
+    non_empty_cells = []
+    for col_name, col_data in columns.items():
+        if not is_column_completed(col_data):
+            level += 1
+            non_empty_cells.extend(col_data.dropna().tolist())
+        else:
+            break
+    return level, non_empty_cells
 
 st.title("Data Career Path Level Up")
 
 # Input for file path
 file_path = st.text_input("Enter the path to your Excel file:")
 
-#/Users/stijndolphen/Downloads/careerpathtemplate.xlsx
 if file_path:
     try:
         # Load Excel data
-        df1, df2 = load_excel_data(file_path)
+        df = load_excel_data(file_path)
 
-        # Display column names for debugging
-        st.write("Column names for Sheet1:", df1.columns.tolist())
+        # Select only the columns of interest
+        ae_columns = df.filter(like='AE', axis=1)
+        ds_columns = df.filter(like='DS', axis=1)
 
-        # Display the data and take inputs for Sheet1
-        st.header("Input Parameters from Excel - Sheet1")
-        # Check if 'Input Column' exists in df1.columns
-        if 'Input Column' in df1.columns:
-            input_data1 = df1['Input Column'].values.tolist()
-            new_input_data1 = []
+        # Get level and non-empty cells for AE and DS columns
+        ae_level, ae_values = get_level_and_values(ae_columns)
+        ds_level, ds_values = get_level_and_values(ds_columns)
 
-            for i, val in enumerate(input_data1):
-                new_val = st.number_input(f'Sheet1 Input {i+1}', value=val, min_value=0, max_value=5)
-                new_input_data1.append(new_val)
+        # Display results
+        st.subheader("Results for AE")
+        st.write(f"Level: {ae_level}")
+        st.write("Non-empty cells:")
+        for value in ae_values:
+            st.write(value)
 
-            # Update the DataFrame with new input values for Sheet1
-            df1['Input Column'] = new_input_data1
-
-            # Process the data and calculate results for Sheet1 (example logic)
-            st.header("Processed Results - Sheet1")
-            df1['Result Column'] = df1['Input Column'] * 2  # Replace with actual calculation logic
-
-            # Display the results for Sheet1
-            st.subheader("Results for Sheet1")
-            st.dataframe(df1)
-        else:
-            st.error("Column 'Input Column' not found in Sheet1.")
-
-        # Display the data and take inputs for Sheet2
-        st.header("Input Parameters from Excel - Sheet2")
-        # ... (remaining code for Sheet2 input and processing)
-
-        # Display the results for Sheet2
-        # ... (remaining code for displaying results)
-
-        # Save the updated data to a new Excel file
-        if st.button('Save Results'):
-            save_excel_data('updated_data.xlsx', df1, df2)
-            st.success('Results saved to updated_data.xlsx')
+        st.subheader("Results for DS")
+        st.write(f"Level: {ds_level}")
+        st.write("Non-empty cells:")
+        for value in ds_values:
+            st.write(value)
     except Exception as e:
         st.error(f"An error occurred: {e}")
-
 
 
 # Run main()
