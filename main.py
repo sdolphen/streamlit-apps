@@ -108,16 +108,8 @@ This personalized feedback is aimed at helping you upgrade your total level and 
 
 
 
-
 import streamlit as st
 import pandas as pd
-
-# Function to load Excel data from a single sheet
-@st.cache
-def load_excel_data(file_path):
-    xls = pd.ExcelFile(file_path)
-    df = pd.read_excel(xls, 'Sheet1')  # Adjust sheet name as necessary
-    return df
 
 # Function to check if a column is fully completed (i.e., all cells are empty)
 def is_column_completed(column):
@@ -137,13 +129,13 @@ def get_level_and_values(columns):
 
 st.title("Data Career Path Level Up")
 
-# Input for file path
-file_path = st.text_input("Enter the path to your Excel file:")
+# File uploader
+file = st.file_uploader("Upload Excel file", type=['xlsx'])
 
-if file_path:
+if file is not None:
     try:
         # Load Excel data
-        df = load_excel_data(file_path)
+        df = pd.read_excel(file)
 
         # Select only the columns of interest
         ae_columns = df.filter(like='AE', axis=1)
@@ -167,6 +159,7 @@ if file_path:
             st.write(value)
     except Exception as e:
         st.error(f"An error occurred: {e}")
+
 
 
 # Run main()
