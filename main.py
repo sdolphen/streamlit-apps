@@ -104,12 +104,12 @@ if file is not None:
         at_columns = df.filter(like='AT', axis=1)
 
         # Debug: Display the filtered columns
-        #st.write("AE Columns:")
-        #st.write(ae_columns)
-        #st.write("DS Columns:")
-        #st.write(ds_columns)
-        #st.write("AT Columns:")
-        #st.write(at_columns)
+        st.write("AE Columns:")
+        st.write(ae_columns)
+        st.write("DS Columns:")
+        st.write(ds_columns)
+        st.write("AT Columns:")
+        st.write(at_columns)
 
         # Get level and non-empty cells for AE, DS, and AT columns
         ae_level, ae_values = get_level_and_values(ae_columns)
