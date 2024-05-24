@@ -116,6 +116,22 @@ def check_installed_packages():
     installed_packages = subprocess.check_output(['pip', 'freeze']).decode('utf-8')
     return installed_packages
 
+# Function to check if a column is fully completed (i.e., all cells are empty)
+def is_column_completed(column):
+    return column.isna().all()
+
+# Function to get the level and non-empty cells for a group of columns
+def get_level_and_values(columns):
+    level = 0
+    non_empty_cells = []
+    for col_name, col_data in columns.items():
+        if not is_column_completed(col_data):
+            level += 1
+            non_empty_cells.extend(col_data.dropna().tolist())
+            if level == 3:  # Adjust to the lowest level you want to reach
+                break
+    return level, non_empty_cells
+
 st.title("Data Career Path Level Up")
 
 # Display installed packages
@@ -152,22 +168,6 @@ if file is not None:
             st.write(value)
     except Exception as e:
         st.error(f"An error occurred: {e}")
-
-# Function to check if a column is fully completed (i.e., all cells are empty)
-def is_column_completed(column):
-    return column.isna().all()
-
-# Function to get the level and non-empty cells for a group of columns
-def get_level_and_values(columns):
-    level = 0
-    non_empty_cells = []
-    for col_name, col_data in columns.items():
-        if not is_column_completed(col_data):
-            level += 1
-            non_empty_cells.extend(col_data.dropna().tolist())
-            if level == 3:  # Adjust to the lowest level you want to reach
-                break
-    return level, non_empty_cells
 
 
 
