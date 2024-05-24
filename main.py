@@ -158,6 +158,8 @@ Select Your Career Path: Choose your desired career path from a list of options,
 Get Tailored Feedback: Based on your inputs, our application analyzes the data and provides you with a detailed report highlighting the specific areas you need to improve on. 
 This personalized feedback is aimed at helping you upgrade your total level and achieve your career goals efficiently.''')
 
+    return None
+
 
 # Run main()
 
