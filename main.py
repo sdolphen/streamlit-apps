@@ -108,13 +108,15 @@ if file is not None:
         at_columns = df.filter(like='AT', axis=1)
 
         # Debug: Display the filtered columns
-        #if selected_domain == 'AE': -> complete if/elif to determine which df to show
-        st.write("AE Columns:")
-        st.write(ae_columns) # add width to display the full width of the df
-        st.write("DS Columns:")
-        st.write(ds_columns)
-        st.write("AT Columns:")
-        st.write(at_columns)
+        if selected_domain == 'AE': #-> complete if/elif to determine which df to show
+            st.write("AE Columns:")
+            st.write(ae_columns) # add width to display the full width of the df
+        elif selected_domain == 'DS':
+            st.write("DS Columns:")
+            st.write(ds_columns)
+        elif selected_domain == 'AT':
+            st.write("AT Columns:")
+            st.write(at_columns)
 
         # add colour code to the df -> look for interesting visual to combine df and colour codes
 
@@ -148,8 +150,7 @@ if file is not None:
                 st.write(value)
     except Exception as e:
         st.error(f"An error occurred: {e}")
-
-
+    #add dynamic or simply space between the two parts, frames?
 
 
 # Run main()
