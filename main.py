@@ -58,7 +58,7 @@ def cs_sidebar():
 
 def cs_body():
 
-    col1, col2, col3 = st.columns(3)
+    col1, col2 = st.columns(2)
 
     #######################################
     # COLUMN 1
@@ -68,18 +68,12 @@ def cs_body():
 
     col1.subheader('Display text')
     col1.code('''
-st.text('Fixed width text')
-st.markdown('_Markdown_') # see #*
-st.caption('Balloons. Hundreds of them...')
-st.latex(r\'\'\' e^{i\pi} + 1 = 0 \'\'\')
-st.write('Most objects') # df, err, func, keras!
-st.write(['st', 'is <', 3]) # see *
-st.title('My title')
-st.header('My header')
-st.subheader('My sub')
-st.code('for i in range(8): foo()')
+    Dear data strategist
 
-# * optional kwarg unsafe_allow_html = True
+    We believe that building and nurturing our coaching culture is the most effective way to help you develop as a professional, 
+    one who provides excellent services to our clients and works closely with other colleagues.
+
+
 
     ''')
 
@@ -88,25 +82,24 @@ st.code('for i in range(8): foo()')
     # COLUMN 2
     #######################################
 
-    # Display interactive widgets
-
-    col2.subheader('Display interactive widgets')
-    col2.markdown('test')
-    col2.markdown('test2')
-
-
-    #######################################
-    # COLUMN 3
-    #######################################
-
     # Optimize performance
 
-    col3.subheader('Optimize performance')
-    col3.write('write instead of markdown is also an option, maybe the best one?')
-    col3.code('''
+    col2.subheader('Optimize performance')
+    col2.write('write instead of markdown is also an option, maybe the best one?')
+    col2.code('''
     you can also add some code below to combine both, maybe to display 
     the results this way?
     ''')
+    col2.code('''Navigating the data career landscape can be challenging, with numerous specializations and skill sets required to advance. Our innovative application is designed to help you
+     identify the key areas you need to focus on to level up in your chosen data career path.
+
+How It Works
+Input Your Current Levels: Begin by inputting your current proficiency levels across various critical aspects of your data career, such as data analysis, machine learning, data visualization, and more.
+
+Select Your Career Path: Choose your desired career path from a list of options, including roles like Data Scientist, Data Analyst, Data Engineer, and Data Strategist.
+
+Get Tailored Feedback: Based on your inputs, our application analyzes the data and provides you with a detailed report highlighting the specific areas you need to improve on. 
+This personalized feedback is aimed at helping you upgrade your total level and achieve your career goals efficiently.''')
 
 
     return None
