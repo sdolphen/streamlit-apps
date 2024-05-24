@@ -55,6 +55,10 @@ def cs_sidebar():
 
 
 ## APPLICATION FOR INPUT/OUTPUT 
+#button first
+#df second
+#add visuals (heatmap+)
+#focus on progression
 
 import streamlit as st
 import pandas as pd
@@ -104,12 +108,15 @@ if file is not None:
         at_columns = df.filter(like='AT', axis=1)
 
         # Debug: Display the filtered columns
+        #if selected_domain == 'AE': -> complete if/elif to determine which df to show
         st.write("AE Columns:")
-        st.write(ae_columns)
+        st.write(ae_columns) # add width to display the full width of the df
         st.write("DS Columns:")
         st.write(ds_columns)
         st.write("AT Columns:")
         st.write(at_columns)
+
+        # add colour code to the df -> look for interesting visual to combine df and colour codes
 
         # Get level and non-empty cells for AE, DS, and AT columns
         ae_level, ae_values = get_level_and_values(ae_columns)
