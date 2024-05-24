@@ -56,7 +56,6 @@ def cs_sidebar():
 
 ## APPLICATION FOR INPUT/OUTPUT 
 
-
 import streamlit as st
 import pandas as pd
 import subprocess
@@ -92,41 +91,57 @@ file = st.file_uploader("Upload Excel file", type=['xlsx'])
 
 if file is not None:
     try:
-        # Load Excel data
+        # Load Excel data from the specified sheet
         df = pd.read_excel(file, sheet_name='Sheet1', engine='openpyxl')
 
         # Debug: Display the loaded dataframe
-        st.write("Loaded DataFrame:")
+        st.write("Loaded DataFrame from 'Sheet1':")
         st.write(df)
 
         # Select only the columns of interest
         ae_columns = df.filter(like='AE', axis=1)
         ds_columns = df.filter(like='DS', axis=1)
+        at_columns = df.filter(like='AT', axis=1)
 
         # Debug: Display the filtered columns
         st.write("AE Columns:")
         st.write(ae_columns)
         st.write("DS Columns:")
         st.write(ds_columns)
+        st.write("AT Columns:")
+        st.write(at_columns)
 
-        # Get level and non-empty cells for AE and DS columns
+        # Get level and non-empty cells for AE, DS, and AT columns
         ae_level, ae_values = get_level_and_values(ae_columns)
         ds_level, ds_values = get_level_and_values(ds_columns)
+        at_level, at_values = get_level_and_values(at_columns)
 
-        # Display results
-        st.subheader("Results for AE")
-        st.write(f"Level: {ae_level}")
-        st.write("Non-empty cells:")
-        for value in ae_values:
-            st.write(value)
+        # Display domain buttons
+        st.subheader("Select Domain to Display:")
+        selected_domain = st.radio("Domain", ['AE', 'DS', 'AT'])
 
-        st.subheader("Results for DS")
-        st.write(f"Level: {ds_level}")
-        st.write("Non-empty cells:")
-        for value in ds_values:
-            st.write(value)
+        # Display results based on the selected domain
+        if selected_domain == 'AE':
+            st.subheader("Results for AE")
+            st.write(f"Level: {ae_level}")
+            st.write("Non-empty cells:")
+            for value in ae_values:
+                st.write(value)
+        elif selected_domain == 'DS':
+            st.subheader("Results for DS")
+            st.write(f"Level: {ds_level}")
+            st.write("Non-empty cells:")
+            for value in ds_values:
+                st.write(value)
+        elif selected_domain == 'AT':
+            st.subheader("Results for AT")
+            st.write(f"Level: {at_level}")
+            st.write("Non-empty cells:")
+            for value in at_values:
+                st.write(value)
     except Exception as e:
         st.error(f"An error occurred: {e}")
+
 
 
 
