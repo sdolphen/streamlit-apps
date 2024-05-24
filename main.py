@@ -107,6 +107,17 @@ if file is not None:
         ds_columns = df.filter(like='DS', axis=1)
         at_columns = df.filter(like='AT', axis=1)
 
+        # add colour code to the df -> look for interesting visual to combine df and colour codes
+
+        # Get level and non-empty cells for AE, DS, and AT columns
+        ae_level, ae_values = get_level_and_values(ae_columns)
+        ds_level, ds_values = get_level_and_values(ds_columns)
+        at_level, at_values = get_level_and_values(at_columns)
+
+        # Display domain buttons
+        st.subheader("Select Domain to Display:")
+        selected_domain = st.radio("For which domain do you want to improve?", ['AE', 'DS', 'AT'])
+
         # Debug: Display the filtered columns
         if selected_domain == 'AE': #-> complete if/elif to determine which df to show
             st.write("AE Columns:")
@@ -118,16 +129,7 @@ if file is not None:
             st.write("AT Columns:")
             st.write(at_columns)
 
-        # add colour code to the df -> look for interesting visual to combine df and colour codes
-
-        # Get level and non-empty cells for AE, DS, and AT columns
-        ae_level, ae_values = get_level_and_values(ae_columns)
-        ds_level, ds_values = get_level_and_values(ds_columns)
-        at_level, at_values = get_level_and_values(at_columns)
-
-        # Display domain buttons
-        st.subheader("Select Domain to Display:")
-        selected_domain = st.radio("For which domain do you want to improve?", ['AE', 'DS', 'AT'])
+        
 
         # Display results based on the selected domain
         if selected_domain == 'AE':
