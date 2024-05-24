@@ -104,50 +104,70 @@ This personalized feedback is aimed at helping you upgrade your total level and 
 
 
 ## APPLICATION FOR INPUT/OUTPUT 
-
 import streamlit as st
 import pandas as pd
 
-# Function to load Excel data
-@st.cache
+# Function to load Excel data from multiple sheets @st.cache
 def load_excel_data(file_path):
     xls = pd.ExcelFile(file_path)
-    sheet1 = pd.read_excel(xls, 'Sheet1')  # assuming data is in 'Sheet1'
-    return sheet1
+    sheet1 = pd.read_excel(xls, 'Sheet1')  # Adjust sheet names as necessary
+    sheet2 = pd.read_excel(xls, 'Sheet2')
+    return sheet1, sheet2
 
-# Function to save the modified Excel data
-def save_excel_data(file_path, df):
+# Function to save the modified Excel data to multiple sheets
+def save_excel_data(file_path, df1, df2):
     with pd.ExcelWriter(file_path, engine='openpyxl') as writer:
-        df.to_excel(writer, index=False, sheet_name='Sheet1')
+        df1.to_excel(writer, index=False, sheet_name='Sheet1')
+        df2.to_excel(writer, index=False, sheet_name='Sheet2')
 
 # Load Excel data
-excel_file = 'data.xlsx'  # path to your Excel file
-df = load_excel_data(excel_file)
+excel_file = 'careerpathmodel.xlsx'  # path to your Excel file
+df1, df2 = load_excel_data(excel_file)
 
 st.title("Data Career Path Level Up")
 
-# Display the data and take inputs
-st.header("Input Parameters from Excel")
-input_data = df['Input Column'].values.tolist()  # assuming column name is 'Input Column'
-new_input_data = []
+# Display the data and take inputs for Sheet1
+st.header("Input Parameters from Excel - Sheet1")
+input_data1 = df1['Input Column'].values.tolist()  # Adjust column name as necessary
+new_input_data1 = []
 
-for i, val in enumerate(input_data):
-    new_val = st.number_input(f'Input {i+1}', value=val, min_value=0, max_value=5)
-    new_input_data.append(new_val)
+for i, val in enumerate(input_data1):
+    new_val = st.number_input(f'Sheet1 Input {i+1}', value=val, min_value=0, max_value=5)
+    new_input_data1.append(new_val)
 
-# Update the DataFrame with new input values
-df['Input Column'] = new_input_data
+# Update the DataFrame with new input values for Sheet1
+df1['Input Column'] = new_input_data1
 
-# Process the data and calculate results (example logic, replace with actual logic)
-st.header("Processed Results")
-df['Result Column'] = df['Input Column'] * 2  # replace with actual calculation
+# Process the data and calculate results for Sheet1 (example logic)
+st.header("Processed Results - Sheet1")
+df1['Result Column'] = df1['Input Column'] * 2  # Replace with actual calculation logic
 
-# Display the results
-st.dataframe(df)
+# Display the data and take inputs for Sheet2
+st.header("Input Parameters from Excel - Sheet2")
+input_data2 = df2['Input Column'].values.tolist()  # Adjust column name as necessary
+new_input_data2 = []
+
+for i, val in enumerate(input_data2):
+    new_val = st.number_input(f'Sheet2 Input {i+1}', value=val, min_value=0, max_value=5)
+    new_input_data2.append(new_val)
+
+# Update the DataFrame with new input values for Sheet2
+df2['Input Column'] = new_input_data2
+
+# Process the data and calculate results for Sheet2 (example logic)
+st.header("Processed Results - Sheet2")
+df2['Result Column'] = df2['Input Column'] * 2  # Replace with actual calculation logic
+
+# Display the results for both sheets
+st.subheader("Results for Sheet1")
+st.dataframe(df1)
+
+st.subheader("Results for Sheet2")
+st.dataframe(df2)
 
 # Save the updated data to a new Excel file
 if st.button('Save Results'):
-    save_excel_data('updated_data.xlsx', df)
+    save_excel_data('updated_data.xlsx', df1, df2)
     st.success('Results saved to updated_data.xlsx')
 
 
