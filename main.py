@@ -12,7 +12,6 @@ st.set_page_config(
 
 def main():
     cs_sidebar()
-    get_level_and_values()
 
     return None
 
