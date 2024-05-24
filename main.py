@@ -87,7 +87,7 @@ st.write("Installed Packages:")
 st.text(check_installed_packages())
 
 # File uploader
-file = st.file_uploader("Upload Excel file", type=['xlsx'])
+file = st.file_uploader("Upload Your Personal Career Path Excel file", type=['xlsx'])
 
 if file is not None:
     try:
@@ -95,7 +95,7 @@ if file is not None:
         df = pd.read_excel(file, sheet_name='Sheet1', engine='openpyxl')
 
         # Debug: Display the loaded dataframe
-        st.write("Loaded DataFrame from 'Sheet1':")
+        st.write("Loaded DataFrame from file (temporary for debugging):")
         st.write(df)
 
         # Select only the columns of interest
@@ -104,12 +104,12 @@ if file is not None:
         at_columns = df.filter(like='AT', axis=1)
 
         # Debug: Display the filtered columns
-        st.write("AE Columns:")
-        st.write(ae_columns)
-        st.write("DS Columns:")
-        st.write(ds_columns)
-        st.write("AT Columns:")
-        st.write(at_columns)
+        #st.write("AE Columns:")
+        #st.write(ae_columns)
+        #st.write("DS Columns:")
+        #st.write(ds_columns)
+        #st.write("AT Columns:")
+        #st.write(at_columns)
 
         # Get level and non-empty cells for AE, DS, and AT columns
         ae_level, ae_values = get_level_and_values(ae_columns)
@@ -118,24 +118,24 @@ if file is not None:
 
         # Display domain buttons
         st.subheader("Select Domain to Display:")
-        selected_domain = st.radio("Domain", ['AE', 'DS', 'AT'])
+        selected_domain = st.radio("For which domain do you want to improve?", ['AE', 'DS', 'AT'])
 
         # Display results based on the selected domain
         if selected_domain == 'AE':
-            st.subheader("Results for AE")
+            st.subheader("On which domains do you need to improve to level up for the AE track?")
             st.write(f"Level: {ae_level}")
             st.write("Non-empty cells:")
             for value in ae_values:
                 st.write(value)
         elif selected_domain == 'DS':
-            st.subheader("Results for DS")
+            st.subheader("On which domains do you need to improve to level up for the DS track")
             st.write(f"Level: {ds_level}")
             st.write("Non-empty cells:")
             for value in ds_values:
                 st.write(value)
         elif selected_domain == 'AT':
-            st.subheader("Results for AT")
-            st.write(f"Level: {at_level}")
+            st.subheader("On which domains do you need to improve to level up for the AT track")
+            st.write(f"Current level: {at_level}")
             st.write("Non-empty cells:")
             for value in at_values:
                 st.write(value)
