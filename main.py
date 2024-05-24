@@ -127,6 +127,7 @@ st.title("Data Career Path Level Up")
 # Input for file path
 file_path = st.text_input("Enter the path to your Excel file:")
 
+#/Users/stijndolphen/Downloads/careerpathtemplate.xlsx
 if file_path:
     try:
         # Load Excel data
