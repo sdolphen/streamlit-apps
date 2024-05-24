@@ -99,8 +99,8 @@ if file is not None:
         df = pd.read_excel(file, sheet_name='Sheet1', engine='openpyxl')
 
         # Debug: Display the loaded dataframe
-        st.write("Loaded DataFrame from file (temporary for debugging):")
-        st.write(df)
+        #st.write("Loaded DataFrame from file (temporary for debugging):")
+        #st.write(df)
 
         # Select only the columns of interest
         ae_columns = df.filter(like='AE', axis=1)
