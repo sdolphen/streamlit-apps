@@ -36,16 +36,14 @@ def cs_sidebar():
 
     st.sidebar.code('text 1')
 
-    st.sidebar.markdown('__Add widgets to sidebar__')
-
     st.sidebar.markdown('__Instructions to use the app__')
     st.sidebar.markdown('You should start by copying your levels on different career path topics')
 
-    st.sidebar.markdown('__Command line__')
+    st.sidebar.markdown('__Info 1__')
 
 
-    st.sidebar.markdown('__Pre-release features__')
-    st.sidebar.markdown('<small>Learn more about [experimental features](https://docs.streamlit.io/library/advanced-features/prerelease#beta-and-experimental-features)</small>', unsafe_allow_html=True)
+    st.sidebar.markdown('__Info 2__')
+    st.sidebar.markdown('<small>Learn more about [career path levels](https://docs.streamlit.io/library/advanced-features/prerelease#beta-and-experimental-features)</small>', unsafe_allow_html=True)
 
     st.sidebar.markdown('''<hr>''', unsafe_allow_html=True)
     st.sidebar.markdown('''<small>[Career path sheet](https://github.com/daniellewisDL/streamlit-cheat-sheet)  | June 2024 | [Dataroots](https://dataroots.io/)</small>''', unsafe_allow_html=True)
