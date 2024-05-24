@@ -80,8 +80,7 @@ def get_level_and_values(columns):
         if not is_column_completed(col_data):
             level += 1
             non_empty_cells.extend(col_data.dropna().tolist())
-            if level == 3:  # Adjust to the lowest level you want to reach
-                break
+            break  # Stop at the first non-empty column
     return level, non_empty_cells
 
 st.title("Data Career Path Level Up")
@@ -98,9 +97,19 @@ if file is not None:
         # Load Excel data
         df = pd.read_excel(file, engine='openpyxl')
 
+        # Debug: Display the loaded dataframe
+        st.write("Loaded DataFrame:")
+        st.write(df)
+
         # Select only the columns of interest
         ae_columns = df.filter(like='AE', axis=1)
         ds_columns = df.filter(like='DS', axis=1)
+
+        # Debug: Display the filtered columns
+        st.write("AE Columns:")
+        st.write(ae_columns)
+        st.write("DS Columns:")
+        st.write(ds_columns)
 
         # Get level and non-empty cells for AE and DS columns
         ae_level, ae_values = get_level_and_values(ae_columns)
@@ -121,44 +130,6 @@ if file is not None:
     except Exception as e:
         st.error(f"An error occurred: {e}")
 
-
-
-
-
-##########################
-# Main body for info
-##########################
-
-def cs_body():
-
-    col1 = st.columns(1 )
-
-    #######################################
-    # COLUMN 1
-    #######################################
-    
-    # Display text
-
-    col1.subheader('Display text')
-    col1.code('''
-    Dear data strategist
-
-    We believe that building and nurturing our coaching culture is the most effective way to help you develop as a professional, 
-    one who provides excellent services to our clients and works closely with other colleagues.
-    ''')
-
-    col1.code('''Navigating the data career landscape can be challenging, with numerous specializations and skill sets required to advance. Our innovative application is designed to help you
-     identify the key areas you need to focus on to level up in your chosen data career path.
-
-How It Works
-Input Your Current Levels: Begin by inputting your current proficiency levels across various critical aspects of your data career, such as data analysis, machine learning, data visualization, and more.
-
-Select Your Career Path: Choose your desired career path from a list of options, including roles like Data Scientist, Data Analyst, Data Engineer, and Data Strategist.
-
-Get Tailored Feedback: Based on your inputs, our application analyzes the data and provides you with a detailed report highlighting the specific areas you need to improve on. 
-This personalized feedback is aimed at helping you upgrade your total level and achieve your career goals efficiently.''')
-
-    return None
 
 
 # Run main()
