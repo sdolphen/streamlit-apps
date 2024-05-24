@@ -93,7 +93,7 @@ file = st.file_uploader("Upload Excel file", type=['xlsx'])
 if file is not None:
     try:
         # Load Excel data
-        df = pd.read_excel(file, engine='openpyxl')
+        df = pd.read_excel(file, sheet_name='Sheet1', engine='openpyxl')
 
         # Debug: Display the loaded dataframe
         st.write("Loaded DataFrame:")
