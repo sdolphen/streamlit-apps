@@ -93,8 +93,8 @@ st.code('for i in range(8): foo()')
     # Display interactive widgets
 
     col2.subheader('Display interactive widgets')
-    col2.Markdown(''' test ''')
-    col2.Markdown(''' test2 ''')
+    col2.Markdown('''test ''')
+    col2.Markdown('''test2 ''')
 
 
     #######################################
