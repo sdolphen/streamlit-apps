@@ -103,7 +103,12 @@ This personalized feedback is aimed at helping you upgrade your total level and 
     return None
 
 
+
 ## APPLICATION FOR INPUT/OUTPUT 
+
+
+
+
 import streamlit as st
 import pandas as pd
 
@@ -126,8 +131,8 @@ def get_level_and_values(columns):
         if not is_column_completed(col_data):
             level += 1
             non_empty_cells.extend(col_data.dropna().tolist())
-        else:
-            break
+            if level == 3:  # Adjust to the lowest level you want to reach
+                break
     return level, non_empty_cells
 
 st.title("Data Career Path Level Up")
