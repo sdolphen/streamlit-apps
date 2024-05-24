@@ -104,10 +104,12 @@ This personalized feedback is aimed at helping you upgrade your total level and 
 
 
 ## APPLICATION FOR INPUT/OUTPUT 
+
 import streamlit as st
 import pandas as pd
 
-# Function to load Excel data from multiple sheets @st.cache
+# Function to load Excel data from multiple sheets
+@st.cache
 def load_excel_data(file_path):
     xls = pd.ExcelFile(file_path)
     sheet1 = pd.read_excel(xls, 'Sheet1')  # Adjust sheet names as necessary
@@ -120,55 +122,57 @@ def save_excel_data(file_path, df1, df2):
         df1.to_excel(writer, index=False, sheet_name='Sheet1')
         df2.to_excel(writer, index=False, sheet_name='Sheet2')
 
-# Load Excel data
-excel_file = 'careerpathmodel.xlsx'  # path to your Excel file
-df1, df2 = load_excel_data(excel_file)
-
 st.title("Data Career Path Level Up")
 
-# Display the data and take inputs for Sheet1
-st.header("Input Parameters from Excel - Sheet1")
-input_data1 = df1['Input Column'].values.tolist()  # Adjust column name as necessary
-new_input_data1 = []
+# Input for file path
+file_path = st.text_input("Enter the path to your Excel file:")
 
-for i, val in enumerate(input_data1):
-    new_val = st.number_input(f'Sheet1 Input {i+1}', value=val, min_value=0, max_value=5)
-    new_input_data1.append(new_val)
+if file_path:
+    try:
+        # Load Excel data
+        df1, df2 = load_excel_data(file_path)
 
-# Update the DataFrame with new input values for Sheet1
-df1['Input Column'] = new_input_data1
+        # Display column names for debugging
+        st.write("Column names for Sheet1:", df1.columns.tolist())
 
-# Process the data and calculate results for Sheet1 (example logic)
-st.header("Processed Results - Sheet1")
-df1['Result Column'] = df1['Input Column'] * 2  # Replace with actual calculation logic
+        # Display the data and take inputs for Sheet1
+        st.header("Input Parameters from Excel - Sheet1")
+        # Check if 'Input Column' exists in df1.columns
+        if 'Input Column' in df1.columns:
+            input_data1 = df1['Input Column'].values.tolist()
+            new_input_data1 = []
 
-# Display the data and take inputs for Sheet2
-st.header("Input Parameters from Excel - Sheet2")
-input_data2 = df2['Input Column'].values.tolist()  # Adjust column name as necessary
-new_input_data2 = []
+            for i, val in enumerate(input_data1):
+                new_val = st.number_input(f'Sheet1 Input {i+1}', value=val, min_value=0, max_value=5)
+                new_input_data1.append(new_val)
 
-for i, val in enumerate(input_data2):
-    new_val = st.number_input(f'Sheet2 Input {i+1}', value=val, min_value=0, max_value=5)
-    new_input_data2.append(new_val)
+            # Update the DataFrame with new input values for Sheet1
+            df1['Input Column'] = new_input_data1
 
-# Update the DataFrame with new input values for Sheet2
-df2['Input Column'] = new_input_data2
+            # Process the data and calculate results for Sheet1 (example logic)
+            st.header("Processed Results - Sheet1")
+            df1['Result Column'] = df1['Input Column'] * 2  # Replace with actual calculation logic
 
-# Process the data and calculate results for Sheet2 (example logic)
-st.header("Processed Results - Sheet2")
-df2['Result Column'] = df2['Input Column'] * 2  # Replace with actual calculation logic
+            # Display the results for Sheet1
+            st.subheader("Results for Sheet1")
+            st.dataframe(df1)
+        else:
+            st.error("Column 'Input Column' not found in Sheet1.")
 
-# Display the results for both sheets
-st.subheader("Results for Sheet1")
-st.dataframe(df1)
+        # Display the data and take inputs for Sheet2
+        st.header("Input Parameters from Excel - Sheet2")
+        # ... (remaining code for Sheet2 input and processing)
 
-st.subheader("Results for Sheet2")
-st.dataframe(df2)
+        # Display the results for Sheet2
+        # ... (remaining code for displaying results)
 
-# Save the updated data to a new Excel file
-if st.button('Save Results'):
-    save_excel_data('updated_data.xlsx', df1, df2)
-    st.success('Results saved to updated_data.xlsx')
+        # Save the updated data to a new Excel file
+        if st.button('Save Results'):
+            save_excel_data('updated_data.xlsx', df1, df2)
+            st.success('Results saved to updated_data.xlsx')
+    except Exception as e:
+        st.error(f"An error occurred: {e}")
+
 
 
 # Run main()
