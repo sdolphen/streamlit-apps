@@ -72,7 +72,7 @@ def check_installed_packages():
 
 # Function to apply colors based on the 'dummy' column value
 def apply_color_logic(row, dummy_value):
-    return ['background-color: lightgreen' if pd.to_numeric(cell_value, errors='coerce') <= dummy_value else '' for cell_value in row]
+    return ['background-color: lightgreen' if float(cell_value) <= float(dummy_value) else '' for cell_value in row]
 
 st.title("Data Career Path Level Up")
 
@@ -106,6 +106,7 @@ if file is not None:
             st.write(f"No {selected_domain} columns found.")
     except Exception as e:
         st.error(f"An error occurred: {e}")
+
 
 
 
