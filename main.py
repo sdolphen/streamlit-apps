@@ -106,7 +106,14 @@ if file is not None:
 
         # Display the filtered columns with conditional colors
         if not filtered_columns.empty:
-            st.write(f"{selected_domain} Columns with '
+            st.write(f"{selected_domain} Columns with 'dummy' column:")
+            styled_df = filtered_columns.style.apply(apply_color_logic, dummy_value=dummy_column, axis=1)
+            st.dataframe(styled_df)
+        else:
+            st.write(f"No {selected_domain} columns found.")
+    except Exception as e:
+        st.error(f"An error occurred: {e}")
+
 
 
 
