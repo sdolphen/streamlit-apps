@@ -90,9 +90,12 @@ if file is not None:
         # Filter columns based on the selected domain
         filtered_columns = df.filter(like=selected_domain)
 
+        # Print out the columns of the filtered DataFrame for debugging
+        st.write(f"Columns of the filtered DataFrame: {filtered_columns.columns.tolist()}")
+
         # Extract the 'dummy' column and convert to numeric if it exists
-        if 'dummy' in df.columns:
-            dummy_column = pd.to_numeric(df['dummy'], errors='coerce')
+        if 'dummy' in filtered_columns.columns:
+            dummy_column = pd.to_numeric(filtered_columns['dummy'], errors='coerce')
 
             # Add the 'dummy' column to the filtered DataFrame for verification
             filtered_columns.loc[:, 'dummy'] = dummy_column
@@ -105,7 +108,7 @@ if file is not None:
             else:
                 st.write(f"No {selected_domain} columns found.")
         else:
-            st.write("No 'dummy' column found in the Excel file.")
+            st.write("No 'dummy' column found in the filtered DataFrame.")
     except Exception as e:
         st.error(f"An error occurred: {e}")
 
