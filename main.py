@@ -106,7 +106,7 @@ if file is not None:
         if 'dummy' in df.columns and 'topic' in df.columns:
             dummy_column = pd.to_numeric(df['dummy'], errors='coerce')
             topic_column = df['topic']
-            
+
             st.markdown("<br><br>", unsafe_allow_html=True)  # Add spaces before the buttons
             st.write("Let's now choose one of the carreer tracks in our unit to analyze our current skill progression")
 
@@ -139,7 +139,7 @@ if file is not None:
                     # Define a function to apply conditional formatting
                     def apply_conditional_color(row):
                         dummy_value = row['dummy']
-                        return ['background-color: lightgreen' if cell_value <= dummy_value else '' for cell_value in row]
+                        return ['background-color: lightgreen' if isinstance(cell_value, (int, float)) and cell_value <= dummy_value else '' for cell_value in row]
 
                     # Apply conditional formatting using the function
                     styled_df = filtered_columns.style.apply(apply_conditional_color, axis=1)
@@ -150,6 +150,8 @@ if file is not None:
                             return f"Level {int(val)}"
                         except ValueError:
                             return val
+
+                    styled_df = styled_df.format(add_level_prefix)
 
                     styled_df = styled_df.format(add_level_prefix)
 
