@@ -59,6 +59,9 @@ def cs_sidebar():
 #df second
 #add visuals (heatmap+)
 #focus on progression
+
+
+
 import streamlit as st
 import pandas as pd
 import subprocess
@@ -68,14 +71,9 @@ def check_installed_packages():
     installed_packages = subprocess.check_output(['pip', 'freeze']).decode('utf-8')
     return installed_packages
 
-# Function to apply colors based on a dummy cell value
-def apply_color_logic(cell_value, dummy_value):
-    if pd.isna(cell_value):
-        return ''
-    elif cell_value <= dummy_value:
-        return 'background-color: lightgreen'
-    else:
-        return ''
+# Function to apply colors based on the 'dummy' column value
+def apply_color_logic(row, dummy_value):
+    return ['background-color: lightgreen' if cell_value <= dummy_value else '' for cell_value in row]
 
 st.title("Data Career Path Level Up")
 
@@ -91,12 +89,7 @@ if file is not None:
         # Load Excel data from the specified sheet
         df = pd.read_excel(file, sheet_name='Sheet1')
 
-        # Select only the columns of interest
-        ae_columns = df.filter(like='AE', axis=1)
-        ds_columns = df.filter(like='DS', axis=1)
-        at_columns = df.filter(like='AT', axis=1)
-
-        # Get the 'dummy' column
+        # Extract the 'dummy' column
         dummy_column = df['dummy']
 
         # Display domain buttons
@@ -106,24 +99,16 @@ if file is not None:
         # Display the filtered columns with conditional colors
         if selected_domain == 'AE':
             st.write("AE Columns:")
-            dummy_value = st.number_input("Enter the dummy value:", value=0)
-            for col in ae_columns.columns:
-                ae_columns[col] = ae_columns[col].apply(lambda x: apply_color_logic(x, dummy_value))
-            st.dataframe(ae_columns)
+            st.dataframe(df.style.apply(apply_color_logic, dummy_value=dummy_column, axis=1))
         elif selected_domain == 'DS':
             st.write("DS Columns:")
-            dummy_value = st.number_input("Enter the dummy value:", value=0)
-            for col in ds_columns.columns:
-                ds_columns[col] = ds_columns[col].apply(lambda x: apply_color_logic(x, dummy_value))
-            st.dataframe(ds_columns)
+            st.dataframe(df.style.apply(apply_color_logic, dummy_value=dummy_column, axis=1))
         elif selected_domain == 'AT':
             st.write("AT Columns:")
-            dummy_value = st.number_input("Enter the dummy value:", value=0)
-            for col in at_columns.columns:
-                at_columns[col] = at_columns[col].apply(lambda x: apply_color_logic(x, dummy_value))
-            st.dataframe(at_columns)
+            st.dataframe(df.style.apply(apply_color_logic, dummy_value=dummy_column, axis=1))
     except Exception as e:
         st.error(f"An error occurred: {e}")
+
 
 
 
