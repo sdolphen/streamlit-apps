@@ -100,6 +100,9 @@ if file is not None:
             # Add the 'dummy' column to the filtered DataFrame using .loc accessor
             filtered_columns.loc[:, 'dummy'] = dummy_column
 
+            # Print out the columns of the filtered DataFrame for debugging
+            st.write(f"Columns of the filtered DataFrame with 'dummy' column added: {filtered_columns.columns.tolist()}")
+
             # Display the filtered columns with conditional colors
             if not filtered_columns.empty:
                 st.write(f"{selected_domain} Columns with conditional background color:")
@@ -111,6 +114,7 @@ if file is not None:
             st.write("No 'dummy' column found in the original DataFrame.")
     except Exception as e:
         st.error(f"An error occurred: {e}")
+
 
 
 
