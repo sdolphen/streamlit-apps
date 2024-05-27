@@ -59,7 +59,6 @@ def cs_sidebar():
 #df second
 #add visuals (heatmap+)
 #focus on progression
-
 import streamlit as st
 import pandas as pd
 import subprocess
@@ -72,8 +71,8 @@ def check_installed_packages():
 # Function to apply colors based on the 'dummy' column value
 def apply_color_logic(row, dummy_value):
     try:
-        row = row.astype(float)
-        return ['background-color: lightgreen' if cell_value <= dummy_value else '' for cell_value in row]
+        row_values = row.drop('dummy').astype(float)
+        return ['background-color: lightgreen' if cell_value <= dummy_value else '' for cell_value in row_values]
     except ValueError:
         return ['' for _ in row]
 
@@ -113,7 +112,6 @@ if file is not None:
             st.write(f"No {selected_domain} columns found.")
     except Exception as e:
         st.error(f"An error occurred: {e}")
-
 
 
 
