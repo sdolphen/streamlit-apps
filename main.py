@@ -94,9 +94,9 @@ def get_cell_colors(ws):
                 color = cell.fill.fgColor.rgb
                 if color:
                     color = color[2:]  # Remove the "FF" prefix
-                cell_colors[(cell.row, cell.column)] = color
+                cell_colors[(cell.row - 1, cell.column - 1)] = color  # Zero-indexed
             else:
-                cell_colors[(cell.row, cell.column)] = None
+                cell_colors[(cell.row - 1, cell.column - 1)] = None
     return cell_colors
 
 # Function to style the DataFrame with extracted cell colors
@@ -104,7 +104,7 @@ def style_dataframe(df, cell_colors):
     def apply_color(row):
         row_colors = []
         for i, cell in enumerate(row):
-            color = cell_colors.get((row.name + 2, i + 1))  # Adjust for header and 1-based index
+            color = cell_colors.get((row.name, i))
             if color:
                 row_colors.append(f"background-color: #{color}")
             else:
@@ -132,9 +132,10 @@ if file is not None:
         ws = wb['Sheet1']
         cell_colors = get_cell_colors(ws)
 
-        # Debug: Display extracted cell colors
+        # Debug: Display extracted cell colors as a DataFrame
+        cell_colors_df = pd.DataFrame(list(cell_colors.items()), columns=['Cell', 'Color'])
         st.write("Extracted Cell Colors:")
-        st.write(cell_colors)
+        st.dataframe(cell_colors_df)
 
         # Select only the columns of interest
         ae_columns = df.filter(like='AE', axis=1)
