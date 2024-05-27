@@ -103,13 +103,12 @@ if file is not None:
                 st.write(f"{selected_domain} Columns with conditional background color:")
                 
                 # Define a function to apply conditional formatting
-                def apply_conditional_color(row, dummy_col):
-                    return pd.Series(['background-color: lightgreen' if cell_value <= dummy_value else '' 
-                                      for cell_value, dummy_value in zip(row[:-1], dummy_col)], index=row.index[:-1])
-
+                def apply_conditional_color(cell_value, dummy_value):
+                    return 'background-color: lightgreen' if cell_value <= dummy_value else ''
+                
                 # Apply conditional formatting using the function
-                styled_df = filtered_columns.apply(apply_conditional_color, dummy_col=filtered_columns['dummy'], axis=1)
-                st.dataframe(styled_df)
+                styled_df = filtered_columns.style.applymap(lambda cell: apply_conditional_color(cell, filtered_columns['dummy'][cell.index]), subset=filtered_columns.columns[:-1])
+                st.write(styled_df)
             else:
                 st.write(f"No {selected_domain} columns found.")
         else:
