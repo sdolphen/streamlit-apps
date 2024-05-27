@@ -75,7 +75,10 @@ def check_installed_packages():
 def apply_color_logic(value, dummy_value):
     try:
         value = float(value)
-        return 'background-color: lightgreen' if value <= dummy_value else ''
+        condition = value <= dummy_value
+        color = 'lightgreen' if condition else ''
+        st.write(f"Value: {value}, Dummy Value: {dummy_value}, Condition: {condition}, Color: {color}")
+        return f'background-color: {color}'
     except ValueError:
         return ''
 
@@ -115,6 +118,7 @@ if file is not None:
             st.write(f"No {selected_domain} columns found.")
     except Exception as e:
         st.error(f"An error occurred: {e}")
+
 
 
 
