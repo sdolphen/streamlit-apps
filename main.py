@@ -61,7 +61,6 @@ def cs_sidebar():
 #focus on progression
 
 
-
 import streamlit as st
 import pandas as pd
 import subprocess
@@ -78,7 +77,7 @@ def apply_color_logic(value, dummy_value):
         condition = value <= dummy_value
         color = 'lightgreen' if condition else ''
         st.write(f"Value: {value}, Dummy Value: {dummy_value}, Condition: {condition}, Color: {color}")
-        return f'background-color: {color}'
+        return f'background-color: {color}' if condition else ''
     except ValueError:
         return ''
 
@@ -118,6 +117,7 @@ if file is not None:
             st.write(f"No {selected_domain} columns found.")
     except Exception as e:
         st.error(f"An error occurred: {e}")
+
 
 
 
