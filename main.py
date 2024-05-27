@@ -61,7 +61,6 @@ def cs_sidebar():
 #focus on progression
 
 
-
 import streamlit as st
 import pandas as pd
 import subprocess
@@ -105,11 +104,11 @@ if file is not None:
                 
                 # Define a function to apply conditional formatting
                 def apply_conditional_color(row, dummy_col):
-                    return ['background-color: lightgreen' if cell_value <= dummy_value else '' 
-                            for cell_value, dummy_value in zip(row[:-1], dummy_col)]
+                    return pd.Series(['background-color: lightgreen' if cell_value <= dummy_value else '' 
+                                      for cell_value, dummy_value in zip(row[:-1], dummy_col)], index=row.index[:-1])
 
                 # Apply conditional formatting using the function
-                styled_df = filtered_columns.style.apply(apply_conditional_color, dummy_col=filtered_columns['dummy'], axis=1, subset=filtered_columns.columns[:-1])
+                styled_df = filtered_columns.apply(apply_conditional_color, dummy_col=filtered_columns['dummy'], axis=1)
                 st.dataframe(styled_df)
             else:
                 st.write(f"No {selected_domain} columns found.")
@@ -117,6 +116,7 @@ if file is not None:
             st.write("No 'dummy' column found in the original DataFrame.")
     except Exception as e:
         st.error(f"An error occurred: {e}")
+
 
 
 
