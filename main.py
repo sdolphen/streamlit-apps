@@ -59,6 +59,10 @@ def cs_sidebar():
 #df second
 #add visuals (heatmap+)
 #focus on progression
+
+
+
+
 import streamlit as st
 import pandas as pd
 import subprocess
@@ -72,9 +76,9 @@ def check_installed_packages():
 def apply_color_logic(row, dummy_value):
     try:
         row_values = row.drop('dummy').astype(float)
-        return ['background-color: lightgreen' if cell_value <= dummy_value else '' for cell_value in row_values]
+        return ['background-color: lightgreen' if cell_value <= dummy_value else 'background-color: white' for cell_value in row_values]
     except ValueError:
-        return ['' for _ in row]
+        return ['background-color: white' for _ in row]
 
 st.title("Data Career Path Level Up")
 
