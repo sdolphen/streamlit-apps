@@ -60,7 +60,6 @@ def cs_sidebar():
 #add visuals (heatmap+)
 #focus on progression
 
-
 import streamlit as st
 import pandas as pd
 import subprocess
@@ -110,7 +109,7 @@ def style_dataframe(df, cell_colors):
                 row_colors.append("")
         return row_colors
     
-    return df.style.apply(apply_color, axis=1).render()
+    return df.style.apply(apply_color, axis=1)
 
 st.title("Data Career Path Level Up")
 
@@ -149,15 +148,15 @@ if file is not None:
         if selected_domain == 'AE':
             st.write("AE Columns:")
             styled_ae = style_dataframe(ae_columns, cell_colors)
-            st.markdown(styled_ae, unsafe_allow_html=True)
+            st.markdown(styled_ae.to_html(), unsafe_allow_html=True)
         elif selected_domain == 'DS':
             st.write("DS Columns:")
             styled_ds = style_dataframe(ds_columns, cell_colors)
-            st.markdown(styled_ds, unsafe_allow_html=True)
+            st.markdown(styled_ds.to_html(), unsafe_allow_html=True)
         elif selected_domain == 'AT':
             st.write("AT Columns:")
             styled_at = style_dataframe(at_columns, cell_colors)
-            st.markdown(styled_at, unsafe_allow_html=True)
+            st.markdown(styled_at.to_html(), unsafe_allow_html=True)
     except Exception as e:
         st.error(f"An error occurred: {e}")
 
