@@ -3,7 +3,6 @@ from pathlib import Path
 import base64
 
 # Initial page config
-
 st.set_page_config(
      page_title='Streamlit cheat sheet',
      layout="wide",
@@ -63,8 +62,6 @@ import streamlit as st
 import pandas as pd
 import subprocess
 
-# Set Streamlit to wide mode
-st.set_page_config(layout="wide")
 
 # Function to check installed packages
 def check_installed_packages():
