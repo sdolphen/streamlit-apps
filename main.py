@@ -69,6 +69,14 @@ def check_installed_packages():
     installed_packages = subprocess.check_output(['pip', 'freeze']).decode('utf-8')
     return installed_packages
 
+# Function to apply colors based on the 'dummy' column value
+def apply_color_logic(value, dummy_value):
+    try:
+        value = float(value)
+        return 'background-color: lightgreen' if value <= dummy_value else ''
+    except ValueError:
+        return ''
+
 st.title("Data Career Path Level Up")
 
 # Display installed packages
@@ -83,6 +91,9 @@ if file is not None:
         # Load Excel data from the specified sheet
         df = pd.read_excel(file, sheet_name='Sheet1')
 
+        # Extract the 'dummy' column and convert to numeric
+        dummy_column = pd.to_numeric(df['dummy'], errors='coerce')
+
         # Display domain buttons
         st.subheader("Select Domain to Display:")
         selected_domain = st.radio("For which domain do you want to improve?", ['AE', 'DS', 'AT'])
@@ -90,16 +101,18 @@ if file is not None:
         # Filter columns based on the selected domain
         filtered_columns = df.filter(like=selected_domain)
 
-        # Display the filtered columns with static background color
+        # Add the 'dummy' column to the filtered DataFrame for verification
+        filtered_columns['dummy'] = dummy_column
+
+        # Display the filtered columns with conditional colors
         if not filtered_columns.empty:
-            st.write(f"{selected_domain} Columns with static background color:")
-            styled_df = filtered_columns.style.applymap(lambda x: 'background-color: lightgreen')
+            st.write(f"{selected_domain} Columns with conditional background color:")
+            styled_df = filtered_columns.style.applymap(lambda value: apply_color_logic(value, dummy_column), subset=pd.IndexSlice[:, filtered_columns.columns != 'dummy'])
             st.dataframe(styled_df)
         else:
             st.write(f"No {selected_domain} columns found.")
     except Exception as e:
         st.error(f"An error occurred: {e}")
-
 
 
 
