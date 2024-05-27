@@ -93,7 +93,7 @@ if file is not None:
             filtered_columns = df[[col for col in df.columns if col.startswith(selected_domain)]]
 
             # Add the 'dummy' column to the filtered DataFrame using .loc accessor
-            filtered_columns.loc[:, 'dummy'] = dummy_column
+            filtered_columns['dummy'] = dummy_column
 
             # Display the filtered columns with conditional colors
             if not filtered_columns.empty:
@@ -103,7 +103,7 @@ if file is not None:
                 def apply_conditional_color(row):
                     dummy_value = row['dummy']
                     return ['background-color: lightgreen' if cell_value <= dummy_value else '' 
-                            for cell_value in row[:-1]]
+                            for cell_value in row]
 
                 # Apply conditional formatting using the function
                 styled_df = filtered_columns.style.apply(apply_conditional_color, axis=1)
