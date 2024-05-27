@@ -62,7 +62,6 @@ def cs_sidebar():
 
 
 
-
 import streamlit as st
 import pandas as pd
 import subprocess
@@ -73,12 +72,12 @@ def check_installed_packages():
     return installed_packages
 
 # Function to apply colors based on the 'dummy' column value
-def apply_color_logic(row, dummy_value):
+def apply_color_logic(value, dummy_value):
     try:
-        row_values = row.drop('dummy').astype(float)
-        return ['background-color: lightgreen' if cell_value <= dummy_value else 'background-color: white' for cell_value in row_values]
+        value = float(value)
+        return 'background-color: lightgreen' if value <= dummy_value else ''
     except ValueError:
-        return ['background-color: white' for _ in row]
+        return ''
 
 st.title("Data Career Path Level Up")
 
@@ -110,7 +109,7 @@ if file is not None:
         # Display the filtered columns with conditional colors
         if not filtered_columns.empty:
             st.write(f"{selected_domain} Columns with 'dummy' column:")
-            styled_df = filtered_columns.style.apply(apply_color_logic, dummy_value=dummy_column, axis=1)
+            styled_df = filtered_columns.style.applymap(lambda value: apply_color_logic(value, dummy_column), subset=pd.IndexSlice[:, filtered_columns.columns != 'dummy'])
             st.dataframe(styled_df)
         else:
             st.write(f"No {selected_domain} columns found.")
