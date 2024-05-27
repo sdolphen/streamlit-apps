@@ -63,6 +63,7 @@ def cs_sidebar():
 import streamlit as st
 import pandas as pd
 import subprocess
+from openpyxl import load_workbook
 
 # Function to check installed packages
 def check_installed_packages():
@@ -84,6 +85,32 @@ def get_level_and_values(columns):
             break  # Stop at the first non-empty column
     return level, non_empty_cells
 
+# Function to extract cell colors from the worksheet
+def get_cell_colors(ws):
+    cell_colors = {}
+    for row in ws.iter_rows():
+        for cell in row:
+            if cell.fill and cell.fill.fgColor:
+                color = cell.fill.fgColor.rgb
+                cell_colors[(cell.row, cell.column)] = color
+            else:
+                cell_colors[(cell.row, cell.column)] = None
+    return cell_colors
+
+# Function to style the DataFrame with extracted cell colors
+def style_dataframe(df, cell_colors):
+    def apply_color(row):
+        row_colors = []
+        for i, cell in enumerate(row):
+            color = cell_colors.get((row.name + 2, i + 1))  # Adjust for header and 1-based index
+            if color:
+                row_colors.append(f"background-color: #{color[2:]}")
+            else:
+                row_colors.append("")
+        return row_colors
+    
+    return df.style.apply(apply_color, axis=1)
+
 st.title("Data Career Path Level Up")
 
 # Display installed packages
@@ -98,16 +125,15 @@ if file is not None:
         # Load Excel data from the specified sheet
         df = pd.read_excel(file, sheet_name='Sheet1', engine='openpyxl')
 
-        # Debug: Display the loaded dataframe
-        #st.write("Loaded DataFrame from file (temporary for debugging):")
-        #st.write(df)
+        # Load workbook and worksheet to extract cell colors
+        wb = load_workbook(file, data_only=True)
+        ws = wb['Sheet1']
+        cell_colors = get_cell_colors(ws)
 
         # Select only the columns of interest
         ae_columns = df.filter(like='AE', axis=1)
         ds_columns = df.filter(like='DS', axis=1)
         at_columns = df.filter(like='AT', axis=1)
-
-        # add colour code to the df -> look for interesting visual to combine df and colour codes
 
         # Get level and non-empty cells for AE, DS, and AT columns
         ae_level, ae_values = get_level_and_values(ae_columns)
@@ -119,43 +145,47 @@ if file is not None:
         selected_domain = st.radio("For which domain do you want to improve?", ['AE', 'DS', 'AT'])
 
         # Debug: Display the filtered columns
-        if selected_domain == 'AE': #-> complete if/elif to determine which df to show
+        if selected_domain == 'AE':
             st.write("AE Columns:")
-            st.write(ae_columns) # add width to display the full width of the df
+            styled_ae = style_dataframe(ae_columns, cell_colors)
+            st.dataframe(styled_ae.to_html(), unsafe_allow_html=True)
         elif selected_domain == 'DS':
             st.write("DS Columns:")
-            st.write(ds_columns)
+            styled_ds = style_dataframe(ds_columns, cell_colors)
+            st.dataframe(styled_ds.to_html(), unsafe_allow_html=True)
         elif selected_domain == 'AT':
             st.write("AT Columns:")
-            st.write(at_columns)
-
-        
-
-        # Display results based on the selected domain
-        if selected_domain == 'AE':
-            st.subheader("On which domains do you need to improve to level up for the AE track?")
-            st.write(f"My current level: {ae_level}")
-            st.write("The following areas you should try to improve to level up again!:")
-            for value in ae_values:
-                st.write(value)
-        elif selected_domain == 'DS':
-            st.subheader("On which domains do you need to improve to level up for the DS track")
-            st.write(f"My current level: {ds_level}")
-            st.write("The following areas you should try to improve to level up again:")
-            for value in ds_values:
-                st.write(value)
-        elif selected_domain == 'AT':
-            st.subheader("On which domains do you need to improve to level up for the AT track")
-            st.write(f"My current level: {at_level}")
-            st.write("The following areas you should try to improve to level up again:")
-            for value in at_values:
-                st.write(value)
+            styled_at = style_dataframe(at_columns, cell_colors)
+            st.dataframe(styled_at.to_html(), unsafe_allow_html=True)
     except Exception as e:
         st.error(f"An error occurred: {e}")
+
+        # remove info over current and next level!!
+        #suggestive
+
+        # Display results based on the selected domain
+#        if selected_domain == 'AE':
+#            st.subheader("On which domains do you need to improve to level up for the AE track?")
+#            st.write(f"My current level: {ae_level}")
+#            st.write("The following areas you should try to improve to level up again!:")
+#            for value in ae_values:
+#                st.write(value)
+#        elif selected_domain == 'DS':
+#            st.subheader("On which domains do you need to improve to level up for the DS track")
+#            st.write(f"My current level: {ds_level}")
+#            st.write("The following areas you should try to improve to level up again:")
+#           for value in ds_values:
+#                st.write(value)
+#        elif selected_domain == 'AT':
+#            st.subheader("On which domains do you need to improve to level up for the AT track")
+#            st.write(f"My current level: {at_level}")
+#            st.write("The following areas you should try to improve to level up again:")
+#            for value in at_values:
+#                st.write(value)
+#    except Exception as e:
+#        st.error(f"An error occurred: {e}")
     #add dynamic or simply space between the two parts, frames?
 
 
 # Run main()
 
-if __name__ == '__main__':
-    main()
