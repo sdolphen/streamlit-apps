@@ -94,7 +94,7 @@ if file is not None:
         dummy_column = pd.to_numeric(df['dummy'], errors='coerce')
 
         # Add the 'dummy' column to the filtered DataFrame for verification
-        filtered_columns['dummy'] = dummy_column
+        filtered_columns.loc[:, 'dummy'] = dummy_column
 
         # Display the filtered columns with conditional colors
         if not filtered_columns.empty:
@@ -105,7 +105,6 @@ if file is not None:
             st.write(f"No {selected_domain} columns found.")
     except Exception as e:
         st.error(f"An error occurred: {e}")
-
 
 
 
