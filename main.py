@@ -90,8 +90,10 @@ def get_cell_colors(ws):
     cell_colors = {}
     for row in ws.iter_rows():
         for cell in row:
-            if cell.fill and cell.fill.fgColor:
+            if cell.fill and cell.fill.fgColor and cell.fill.fgColor.type == 'rgb':
                 color = cell.fill.fgColor.rgb
+                if color is not None:
+                    color = color[2:]  # Remove the "FF" prefix
                 cell_colors[(cell.row, cell.column)] = color
             else:
                 cell_colors[(cell.row, cell.column)] = None
@@ -104,7 +106,7 @@ def style_dataframe(df, cell_colors):
         for i, cell in enumerate(row):
             color = cell_colors.get((row.name + 2, i + 1))  # Adjust for header and 1-based index
             if color:
-                row_colors.append(f"background-color: #{color[2:]}")
+                row_colors.append(f"background-color: #{color}")
             else:
                 row_colors.append("")
         return row_colors
@@ -144,7 +146,7 @@ if file is not None:
         st.subheader("Select Domain to Display:")
         selected_domain = st.radio("For which domain do you want to improve?", ['AE', 'DS', 'AT'])
 
-        # Debug: Display the filtered columns
+        # Display the filtered columns with styles
         if selected_domain == 'AE':
             st.write("AE Columns:")
             styled_ae = style_dataframe(ae_columns, cell_colors)
@@ -159,6 +161,7 @@ if file is not None:
             st.markdown(styled_at.to_html(), unsafe_allow_html=True)
     except Exception as e:
         st.error(f"An error occurred: {e}")
+
 
 
         # remove info over current and next level!!
