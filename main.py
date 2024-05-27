@@ -96,14 +96,19 @@ if file is not None:
     try:
         # Load Excel data from the specified sheet
         df = pd.read_excel(file, sheet_name='Sheet1')
+        st.write("You're career path is successfully uploaded!")
 
         # Extract the 'dummy' column and convert to numeric if it exists
         if 'dummy' in df.columns:
             dummy_column = pd.to_numeric(df['dummy'], errors='coerce')
             
-
+            # Extract the 'dummy' column and convert to numeric if it exists
+        if 'dummy' in df.columns and 'topic' in df.columns:
+            dummy_column = pd.to_numeric(df['dummy'], errors='coerce')
+            topic_column = df['topic']
+            
             st.markdown("<br><br>", unsafe_allow_html=True)  # Add spaces before the buttons
-            st.write("Let's choose one of the carreer tracks in our unit to analyze our current skill progression")
+            st.write("Let's now choose one of the carreer tracks in our unit to analyze our current skill progression")
 
             # Create three columns for the buttons to be placed next to each other
             col1, col2, col3 = st.columns(3)
@@ -122,13 +127,14 @@ if file is not None:
                 # Add the 'dummy' column to the filtered DataFrame and move it to the beginning
                 filtered_columns = filtered_columns.copy()
                 filtered_columns.insert(0, 'dummy', dummy_column)
+                filtered_columns.insert(0, 'topic', topic_column)
 
                 # Rename columns by removing the domain prefix
-                filtered_columns.columns = ['dummy'] + [col[len(domain_prefix):] for col in filtered_columns.columns[1:]]
+                filtered_columns.columns = ['topic', 'dummy'] + [col[len(domain_prefix):] for col in filtered_columns.columns[2:]]
 
                 # Display the filtered columns with conditional colors
                 if not filtered_columns.empty:
-                    st.write(f"{display_name} Columns with conditional background color:")
+                    st.write(f"{display_name} track skill progression will be showed below:")
 
                     # Define a function to apply conditional formatting
                     def apply_conditional_color(row):
@@ -150,8 +156,8 @@ if file is not None:
                     # Use Streamlit's container to center the DataFrame view
                     with st.container():
                         st.markdown("<div class='dataframe-container'>", unsafe_allow_html=True)
-                        st.markdown("<br>", unsafe_allow_html=True)  # Add spaces before the DataFrame
-                        st.write(f"Showing {display_name} data:")
+                        #st.markdown("<br>", unsafe_allow_html=True)  # Add spaces before the DataFrame
+                        st.write(f"Showing {display_name} progression:")
                         st.dataframe(styled_df, height=600)  # Adjust height to show more rows
                         st.markdown("</div>", unsafe_allow_html=True)
                 else:
