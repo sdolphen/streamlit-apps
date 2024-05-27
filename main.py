@@ -60,7 +60,6 @@ def cs_sidebar():
 #add visuals (heatmap+)
 #focus on progression
 
-
 import streamlit as st
 import pandas as pd
 import subprocess
@@ -71,8 +70,8 @@ def check_installed_packages():
     return installed_packages
 
 # Function to apply colors based on the 'dummy' column value
-def apply_color_logic(row, dummy_value):
-    return ['background-color: lightgreen' if pd.to_numeric(cell_value, errors='coerce') <= dummy_value else '' for cell_value in row]
+def apply_color_logic(row, dummy_values):
+    return ['background-color: lightgreen' if cell_value <= dummy_value else '' for cell_value, dummy_value in zip(row, dummy_values)]
 
 st.title("Data Career Path Level Up")
 
@@ -98,16 +97,15 @@ if file is not None:
         # Display the filtered columns with conditional colors
         if selected_domain == 'AE':
             st.write("AE Columns:")
-            st.dataframe(df.style.apply(apply_color_logic, dummy_value=dummy_column, axis=1))
+            st.dataframe(df.style.apply(apply_color_logic, dummy_values=dummy_column, axis=1))
         elif selected_domain == 'DS':
             st.write("DS Columns:")
-            st.dataframe(df.style.apply(apply_color_logic, dummy_value=dummy_column, axis=1))
+            st.dataframe(df.style.apply(apply_color_logic, dummy_values=dummy_column, axis=1))
         elif selected_domain == 'AT':
             st.write("AT Columns:")
-            st.dataframe(df.style.apply(apply_color_logic, dummy_value=dummy_column, axis=1))
+            st.dataframe(df.style.apply(apply_color_logic, dummy_values=dummy_column, axis=1))
     except Exception as e:
         st.error(f"An error occurred: {e}")
-
 
 
 
