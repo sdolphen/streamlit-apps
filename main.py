@@ -102,7 +102,8 @@ if file is not None:
             dummy_column = pd.to_numeric(df['dummy'], errors='coerce')
             
 
-            st.markdown("<br>", unsafe_allow_html=True)  # Add spaces before the buttons
+            st.markdown("<br><br>", unsafe_allow_html=True)  # Add spaces before the buttons
+            st.write("Let's choose one of the carreer tracks in our unit to analyze our current skill progression")
 
             # Create three columns for the buttons to be placed next to each other
             col1, col2, col3 = st.columns(3)
