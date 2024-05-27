@@ -57,7 +57,6 @@ def cs_sidebar():
 #df second
 #add visuals (heatmap+)
 #focus on progression
-
 import streamlit as st
 import pandas as pd
 import subprocess
@@ -92,8 +91,12 @@ if file is not None:
             # Filter columns based on the selected domain prefix
             filtered_columns = df[[col for col in df.columns if col.startswith(selected_domain)]]
 
-            # Add the 'dummy' column to the filtered DataFrame using .loc accessor
-            filtered_columns['dummy'] = dummy_column
+            # Add the 'dummy' column to the filtered DataFrame and move it to the beginning
+            filtered_columns = filtered_columns.copy()
+            filtered_columns.insert(0, 'dummy', dummy_column)
+
+            # Rename columns by removing the domain prefix
+            filtered_columns.columns = ['dummy'] + [col[len(selected_domain):] for col in filtered_columns.columns[1:]]
 
             # Display the filtered columns with conditional colors
             if not filtered_columns.empty:
@@ -102,11 +105,20 @@ if file is not None:
                 # Define a function to apply conditional formatting
                 def apply_conditional_color(row):
                     dummy_value = row['dummy']
-                    return ['background-color: lightgreen' if cell_value <= dummy_value else '' 
-                            for cell_value in row]
+                    return ['background-color: lightgreen' if cell_value <= dummy_value else '' for cell_value in row]
 
                 # Apply conditional formatting using the function
                 styled_df = filtered_columns.style.apply(apply_conditional_color, axis=1)
+
+                # Add 'Level ' prefix to each cell value
+                def add_level_prefix(val):
+                    try:
+                        return f"Level {int(val)}"
+                    except ValueError:
+                        return val
+
+                styled_df = styled_df.format(add_level_prefix)
+                
                 st.write(styled_df)
             else:
                 st.write(f"No {selected_domain} columns found.")
