@@ -100,13 +100,10 @@ if file is not None:
             # Add the 'dummy' column to the filtered DataFrame using .loc accessor
             filtered_columns.loc[:, 'dummy'] = dummy_column
 
-            # Print out the columns of the filtered DataFrame for debugging
-            st.write(f"Columns of the filtered DataFrame with 'dummy' column added: {filtered_columns.columns.tolist()}")
-
             # Display the filtered columns with conditional colors
             if not filtered_columns.empty:
                 st.write(f"{selected_domain} Columns with conditional background color:")
-                styled_df = filtered_columns.style.apply(lambda row: ['background-color: lightgreen' if cell_value <= row['dummy'] else '' for cell_value in row], axis=1, subset=filtered_columns.columns[:-1])
+                styled_df = filtered_columns.style.apply(lambda row: ['background-color: lightgreen' if cell_value <= dummy_value else '' for cell_value, dummy_value in zip(row[:-1], row['dummy'])], axis=1, subset=filtered_columns.columns[:-1])
                 st.dataframe(styled_df)
             else:
                 st.write(f"No {selected_domain} columns found.")
