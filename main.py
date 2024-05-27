@@ -61,9 +61,6 @@ import streamlit as st
 import pandas as pd
 import subprocess
 
-# Set Streamlit to wide mode
-st.set_page_config(layout="wide")
-
 # Function to check installed packages
 def check_installed_packages():
     installed_packages = subprocess.check_output(['pip', 'freeze']).decode('utf-8')
