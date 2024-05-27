@@ -90,18 +90,16 @@ def get_cell_colors(ws):
     cell_colors = {}
     for row in ws.iter_rows():
         for cell in row:
-            if cell.fill and cell.fill.fgColor:
-                if cell.fill.fgColor.type == 'rgb':
-                    color = cell.fill.fgColor.rgb
-                    if color:
-                        color = color[2:]  # Remove the "FF" prefix
-                    cell_colors[(cell.row - 1, cell.column - 1)] = color
-                elif cell.fill.fgColor.type == 'theme' and cell.fill.fgColor.theme:
-                    theme_color = ws.parent.theme
-                    theme_color_rgb = theme_color.get_rgb(cell.fill.fgColor.theme)
-                    cell_colors[(cell.row - 1, cell.column - 1)] = theme_color_rgb
+            fill = cell.fill
+            if fill and fill.fgColor:
+                if fill.fgColor.rgb:
+                    color = fill.fgColor.rgb
+                    color = color[2:]  # Remove the "FF" prefix if it's ARGB
+                elif fill.fgColor.theme:
+                    color = f"ThemeColor-{fill.fgColor.theme}"
                 else:
-                    cell_colors[(cell.row - 1, cell.column - 1)] = None
+                    color = None
+                cell_colors[(cell.row - 1, cell.column - 1)] = color
             else:
                 cell_colors[(cell.row - 1, cell.column - 1)] = None
     return cell_colors
@@ -112,7 +110,7 @@ def style_dataframe(df, cell_colors):
         row_colors = []
         for i, cell in enumerate(row):
             color = cell_colors.get((row.name, i))
-            if color:
+            if color and "ThemeColor" not in color:
                 row_colors.append(f"background-color: #{color}")
             else:
                 row_colors.append("")
@@ -142,7 +140,37 @@ if file is not None:
         # Debug: Display extracted cell colors as a DataFrame
         cell_colors_df = pd.DataFrame(list(cell_colors.items()), columns=['Cell', 'Color'])
         st.write("Extracted Cell Colors:")
-        st
+        st.dataframe(cell_colors_df)
+
+        # Select only the columns of interest
+        ae_columns = df.filter(like='AE', axis=1)
+        ds_columns = df.filter(like='DS', axis=1)
+        at_columns = df.filter(like='AT', axis=1)
+
+        # Get level and non-empty cells for AE, DS, and AT columns
+        ae_level, ae_values = get_level_and_values(ae_columns)
+        ds_level, ds_values = get_level_and_values(ds_columns)
+        at_level, at_values = get_level_and_values(at_columns)
+
+        # Display domain buttons
+        st.subheader("Select Domain to Display:")
+        selected_domain = st.radio("For which domain do you want to improve?", ['AE', 'DS', 'AT'])
+
+        # Display the filtered columns with styles
+        if selected_domain == 'AE':
+            st.write("AE Columns:")
+            styled_ae = style_dataframe(ae_columns, cell_colors)
+            st.markdown(styled_ae.to_html(), unsafe_allow_html=True)
+        elif selected_domain == 'DS':
+            st.write("DS Columns:")
+            styled_ds = style_dataframe(ds_columns, cell_colors)
+            st.markdown(styled_ds.to_html(), unsafe_allow_html=True)
+        elif selected_domain == 'AT':
+            st.write("AT Columns:")
+            styled_at = style_dataframe(at_columns, cell_colors)
+            st.markdown(styled_at.to_html(), unsafe_allow_html=True)
+    except Exception as e:
+        st.error(f"An error occurred: {e}")
 
 
 
