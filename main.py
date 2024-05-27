@@ -72,7 +72,11 @@ def check_installed_packages():
 
 # Function to apply colors based on the 'dummy' column value
 def apply_color_logic(row, dummy_value):
-    return ['background-color: lightgreen' if float(cell_value) <= float(dummy_value) else '' for cell_value in row]
+    try:
+        row = row.astype(float)
+        return ['background-color: lightgreen' if cell_value <= dummy_value else '' for cell_value in row]
+    except ValueError:
+        return ['' for _ in row]
 
 st.title("Data Career Path Level Up")
 
