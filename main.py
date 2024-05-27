@@ -93,13 +93,12 @@ if file is not None:
         # Display the filtered columns with static background color
         if not filtered_columns.empty:
             st.write(f"{selected_domain} Columns with static background color:")
-            styled_df = filtered_columns.style.background_gradient(cmap='Greens')
+            styled_df = filtered_columns.style.applymap(lambda x: 'background-color: lightgreen')
             st.dataframe(styled_df)
         else:
             st.write(f"No {selected_domain} columns found.")
     except Exception as e:
         st.error(f"An error occurred: {e}")
-
 
 
 
