@@ -92,7 +92,7 @@ def get_cell_colors(ws):
         for cell in row:
             if cell.fill and cell.fill.fgColor and cell.fill.fgColor.type == 'rgb':
                 color = cell.fill.fgColor.rgb
-                if color is not None:
+                if color:
                     color = color[2:]  # Remove the "FF" prefix
                 cell_colors[(cell.row, cell.column)] = color
             else:
@@ -131,6 +131,10 @@ if file is not None:
         wb = load_workbook(file, data_only=True)
         ws = wb['Sheet1']
         cell_colors = get_cell_colors(ws)
+
+        # Debug: Display extracted cell colors
+        st.write("Extracted Cell Colors:")
+        st.write(cell_colors)
 
         # Select only the columns of interest
         ae_columns = df.filter(like='AE', axis=1)
