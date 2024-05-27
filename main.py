@@ -63,7 +63,6 @@ def cs_sidebar():
 
 
 
-
 import streamlit as st
 import pandas as pd
 import subprocess
@@ -91,18 +90,12 @@ if file is not None:
         st.subheader("Select Domain to Display:")
         selected_domain = st.radio("For which domain do you want to improve?", ['AE', 'DS', 'AT'])
 
-        # Print out the columns of the original DataFrame for debugging
-        st.write(f"Columns of the original DataFrame: {df.columns.tolist()}")
-
         # Extract the 'dummy' column and convert to numeric if it exists
         if 'dummy' in df.columns:
             dummy_column = pd.to_numeric(df['dummy'], errors='coerce')
 
-            # Print out the values of the 'dummy' column for debugging
-            st.write(f"Values of the 'dummy' column: {dummy_column}")
-
-            # Filter columns based on the selected domain
-            filtered_columns = df.filter(like=selected_domain)
+            # Filter columns based on the selected domain prefix
+            filtered_columns = df[[col for col in df.columns if col.startswith(selected_domain)]]
 
             # Add the 'dummy' column to the filtered DataFrame using .loc accessor
             filtered_columns.loc[:, 'dummy'] = dummy_column
@@ -118,8 +111,6 @@ if file is not None:
             st.write("No 'dummy' column found in the original DataFrame.")
     except Exception as e:
         st.error(f"An error occurred: {e}")
-
-
 
 
 
