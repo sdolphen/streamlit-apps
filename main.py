@@ -94,8 +94,60 @@ if file is not None:
 
             with col1:
                 ae_button = st.button("Analytics Engineer")
-            
+            with col2:
+                ds_button = st.button("Data Strategy")
+            with col3:
+                at_button = st.button("Analytics Translator")
 
+            def display_filtered_columns(domain_prefix, display_name):
+                # Filter columns based on the selected domain prefix
+                filtered_columns = df[[col for col in df.columns if col.startswith(domain_prefix)]]
+
+                # Add the 'dummy' column to the filtered DataFrame and move it to the beginning
+                filtered_columns = filtered_columns.copy()
+                filtered_columns.insert(0, 'dummy', dummy_column)
+
+                # Rename columns by removing the domain prefix
+                filtered_columns.columns = ['dummy'] + [col[len(domain_prefix):] for col in filtered_columns.columns[1:]]
+
+                # Display the filtered columns with conditional colors
+                if not filtered_columns.empty:
+                    st.write(f"{display_name} Columns with conditional background color:")
+
+                    # Define a function to apply conditional formatting
+                    def apply_conditional_color(row):
+                        dummy_value = row['dummy']
+                        return ['background-color: lightgreen' if cell_value <= dummy_value else '' for cell_value in row]
+
+                    # Apply conditional formatting using the function
+                    styled_df = filtered_columns.style.apply(apply_conditional_color, axis=1)
+
+                    # Add 'Level ' prefix to each cell value
+                    def add_level_prefix(val):
+                        try:
+                            return f"Level {int(val)}"
+                        except ValueError:
+                            return val
+
+                    styled_df = styled_df.format(add_level_prefix)
+
+                    # Use Streamlit's container to expand the DataFrame view
+                    with st.container():
+                        st.write(styled_df)
+                else:
+                    st.write(f"No {display_name} columns found.")
+
+            # Display the DataFrame based on the button clicked
+            if ae_button:
+                display_filtered_columns('AE', 'Analytics Engineer')
+            elif ds_button:
+                display_filtered_columns('DS', 'Data Strategy')
+            elif at_button:
+                display_filtered_columns('AT', 'Analytics Translator')
+        else:
+            st.write("No 'dummy' column found in the original DataFrame.")
+    except Exception as e:
+        st.error(f"An error occurred: {e}")
 
 
 
