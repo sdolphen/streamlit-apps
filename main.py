@@ -59,7 +59,6 @@ def cs_sidebar():
 #df second
 #add visuals (heatmap+)
 #focus on progression
-
 import streamlit as st
 import pandas as pd
 import subprocess
@@ -87,24 +86,31 @@ if file is not None:
         st.subheader("Select Domain to Display:")
         selected_domain = st.radio("For which domain do you want to improve?", ['AE', 'DS', 'AT'])
 
+        # Print out the columns of the original DataFrame for debugging
+        st.write(f"Columns of the original DataFrame: {df.columns.tolist()}")
+
         # Extract the 'dummy' column and convert to numeric if it exists
-        dummy_column = pd.to_numeric(df['dummy'], errors='coerce')
+        if 'dummy' in df.columns:
+            dummy_column = pd.to_numeric(df['dummy'], errors='coerce')
 
-        # Filter columns based on the selected domain
-        filtered_columns = df.filter(like=selected_domain)
+            # Filter columns based on the selected domain
+            filtered_columns = df.filter(like=selected_domain)
 
-        # Add the 'dummy' column to the filtered DataFrame using .loc accessor
-        filtered_columns.loc[:, 'dummy'] = dummy_column
+            # Add the 'dummy' column to the filtered DataFrame using .loc accessor
+            filtered_columns.loc[:, 'dummy'] = dummy_column
 
-        # Display the filtered columns with conditional colors
-        if not filtered_columns.empty:
-            st.write(f"{selected_domain} Columns with conditional background color:")
-            styled_df = filtered_columns.style.apply(lambda row: ['background-color: lightgreen' if cell_value <= row['dummy'] else '' for cell_value in row], axis=1, subset=filtered_columns.columns[:-1])
-            st.dataframe(styled_df)
+            # Display the filtered columns with conditional colors
+            if not filtered_columns.empty:
+                st.write(f"{selected_domain} Columns with conditional background color:")
+                styled_df = filtered_columns.style.apply(lambda row: ['background-color: lightgreen' if cell_value <= row['dummy'] else '' for cell_value in row], axis=1, subset=filtered_columns.columns[:-1])
+                st.dataframe(styled_df)
+            else:
+                st.write(f"No {selected_domain} columns found.")
         else:
-            st.write(f"No {selected_domain} columns found.")
+            st.write("No 'dummy' column found in the original DataFrame.")
     except Exception as e:
         st.error(f"An error occurred: {e}")
+
 
 
 
