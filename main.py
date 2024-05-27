@@ -60,7 +60,6 @@ def cs_sidebar():
 #add visuals (heatmap+)
 #focus on progression
 
-
 import streamlit as st
 import pandas as pd
 import subprocess
@@ -102,14 +101,12 @@ if file is not None:
         # Filter columns based on the selected domain
         filtered_columns = df.filter(like=selected_domain)
 
+        # Add the 'dummy' column to the filtered DataFrame for verification
+        filtered_columns['dummy'] = dummy_column
+
         # Display the filtered columns with conditional colors
         if not filtered_columns.empty:
-            st.write(f"{selected_domain} Columns:")
-            st.dataframe(filtered_columns.style.apply(apply_color_logic, dummy_value=dummy_column, axis=1))
-        else:
-            st.write(f"No {selected_domain} columns found.")
-    except Exception as e:
-        st.error(f"An error occurred: {e}")
+            st.write(f"{selected_domain} Columns with '
 
 
 
