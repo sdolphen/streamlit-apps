@@ -60,7 +60,6 @@ def cs_sidebar():
 #add visuals (heatmap+)
 #focus on progression
 
-
 import streamlit as st
 import pandas as pd
 import subprocess
@@ -69,17 +68,6 @@ import subprocess
 def check_installed_packages():
     installed_packages = subprocess.check_output(['pip', 'freeze']).decode('utf-8')
     return installed_packages
-
-# Function to apply colors based on the 'dummy' column value
-def apply_color_logic(value, dummy_value):
-    try:
-        value = float(value)
-        condition = value <= dummy_value
-        color = 'lightgreen' if condition else ''
-        st.write(f"Value: {value}, Dummy Value: {dummy_value}, Condition: {condition}, Color: {color}")
-        return f'background-color: {color}' if condition else ''
-    except ValueError:
-        return ''
 
 st.title("Data Career Path Level Up")
 
@@ -95,9 +83,6 @@ if file is not None:
         # Load Excel data from the specified sheet
         df = pd.read_excel(file, sheet_name='Sheet1')
 
-        # Extract the 'dummy' column and convert to numeric
-        dummy_column = pd.to_numeric(df['dummy'], errors='coerce')
-
         # Display domain buttons
         st.subheader("Select Domain to Display:")
         selected_domain = st.radio("For which domain do you want to improve?", ['AE', 'DS', 'AT'])
@@ -105,19 +90,15 @@ if file is not None:
         # Filter columns based on the selected domain
         filtered_columns = df.filter(like=selected_domain)
 
-        # Add the 'dummy' column to the filtered DataFrame for verification
-        filtered_columns['dummy'] = dummy_column
-
-        # Display the filtered columns with conditional colors
+        # Display the filtered columns with static background color
         if not filtered_columns.empty:
-            st.write(f"{selected_domain} Columns with 'dummy' column:")
-            styled_df = filtered_columns.style.applymap(lambda value: apply_color_logic(value, dummy_column), subset=pd.IndexSlice[:, filtered_columns.columns != 'dummy'])
+            st.write(f"{selected_domain} Columns with static background color:")
+            styled_df = filtered_columns.style.background_gradient(cmap='Greens')
             st.dataframe(styled_df)
         else:
             st.write(f"No {selected_domain} columns found.")
     except Exception as e:
         st.error(f"An error occurred: {e}")
-
 
 
 
