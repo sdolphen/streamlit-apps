@@ -59,64 +59,23 @@ def cs_sidebar():
 #df second
 #add visuals (heatmap+)
 #focus on progression
-
 import streamlit as st
 import pandas as pd
 import subprocess
-from openpyxl import load_workbook
 
 # Function to check installed packages
 def check_installed_packages():
     installed_packages = subprocess.check_output(['pip', 'freeze']).decode('utf-8')
     return installed_packages
 
-# Function to check if a column is fully completed (i.e., all cells are empty)
-def is_column_completed(column):
-    return column.isna().all()
-
-# Function to get the level and non-empty cells for a group of columns
-def get_level_and_values(columns):
-    level = 0
-    non_empty_cells = []
-    for col_name, col_data in columns.items():
-        if not is_column_completed(col_data):
-            level += 1
-            non_empty_cells.extend(col_data.dropna().tolist())
-            break  # Stop at the first non-empty column
-    return level, non_empty_cells
-
-# Function to extract cell colors from the worksheet
-def get_cell_colors(ws):
-    cell_colors = {}
-    for row in ws.iter_rows():
-        for cell in row:
-            fill = cell.fill
-            if fill and fill.fgColor:
-                if fill.fgColor.rgb:
-                    color = fill.fgColor.rgb
-                    color = color[2:]  # Remove the "FF" prefix if it's ARGB
-                elif fill.fgColor.theme:
-                    color = f"ThemeColor-{fill.fgColor.theme}"
-                else:
-                    color = None
-                cell_colors[(cell.row - 1, cell.column - 1)] = color
-            else:
-                cell_colors[(cell.row - 1, cell.column - 1)] = None
-    return cell_colors
-
-# Function to style the DataFrame with extracted cell colors
-def style_dataframe(df, cell_colors):
-    def apply_color(row):
-        row_colors = []
-        for i, cell in enumerate(row):
-            color = cell_colors.get((row.name, i))
-            if color and "ThemeColor" not in color:
-                row_colors.append(f"background-color: #{color}")
-            else:
-                row_colors.append("")
-        return row_colors
-    
-    return df.style.apply(apply_color, axis=1)
+# Function to apply colors based on a dummy cell value
+def apply_color_logic(cell_value, dummy_value):
+    if pd.isna(cell_value):
+        return ''
+    elif cell_value <= dummy_value:
+        return 'background-color: lightgreen'
+    else:
+        return ''
 
 st.title("Data Career Path Level Up")
 
@@ -130,45 +89,39 @@ file = st.file_uploader("Upload Your Personal Career Path Excel file", type=['xl
 if file is not None:
     try:
         # Load Excel data from the specified sheet
-        df = pd.read_excel(file, sheet_name='Sheet1', engine='openpyxl')
-
-        # Load workbook and worksheet to extract cell colors
-        wb = load_workbook(file, data_only=True)
-        ws = wb['Sheet1']
-        cell_colors = get_cell_colors(ws)
-
-        # Debug: Display extracted cell colors as a DataFrame
-        cell_colors_df = pd.DataFrame(list(cell_colors.items()), columns=['Cell', 'Color'])
-        st.write("Extracted Cell Colors:")
-        st.dataframe(cell_colors_df)
+        df = pd.read_excel(file, sheet_name='Sheet1')
 
         # Select only the columns of interest
         ae_columns = df.filter(like='AE', axis=1)
         ds_columns = df.filter(like='DS', axis=1)
         at_columns = df.filter(like='AT', axis=1)
 
-        # Get level and non-empty cells for AE, DS, and AT columns
-        ae_level, ae_values = get_level_and_values(ae_columns)
-        ds_level, ds_values = get_level_and_values(ds_columns)
-        at_level, at_values = get_level_and_values(at_columns)
+        # Get the 'dummy' column
+        dummy_column = df['dummy']
 
         # Display domain buttons
         st.subheader("Select Domain to Display:")
         selected_domain = st.radio("For which domain do you want to improve?", ['AE', 'DS', 'AT'])
 
-        # Display the filtered columns with styles
+        # Display the filtered columns with conditional colors
         if selected_domain == 'AE':
             st.write("AE Columns:")
-            styled_ae = style_dataframe(ae_columns, cell_colors)
-            st.markdown(styled_ae.to_html(), unsafe_allow_html=True)
+            dummy_value = st.number_input("Enter the dummy value:", value=0)
+            for col in ae_columns.columns:
+                ae_columns[col] = ae_columns[col].apply(lambda x: apply_color_logic(x, dummy_value))
+            st.dataframe(ae_columns)
         elif selected_domain == 'DS':
             st.write("DS Columns:")
-            styled_ds = style_dataframe(ds_columns, cell_colors)
-            st.markdown(styled_ds.to_html(), unsafe_allow_html=True)
+            dummy_value = st.number_input("Enter the dummy value:", value=0)
+            for col in ds_columns.columns:
+                ds_columns[col] = ds_columns[col].apply(lambda x: apply_color_logic(x, dummy_value))
+            st.dataframe(ds_columns)
         elif selected_domain == 'AT':
             st.write("AT Columns:")
-            styled_at = style_dataframe(at_columns, cell_colors)
-            st.markdown(styled_at.to_html(), unsafe_allow_html=True)
+            dummy_value = st.number_input("Enter the dummy value:", value=0)
+            for col in at_columns.columns:
+                at_columns[col] = at_columns[col].apply(lambda x: apply_color_logic(x, dummy_value))
+            st.dataframe(at_columns)
     except Exception as e:
         st.error(f"An error occurred: {e}")
 
