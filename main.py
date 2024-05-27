@@ -59,7 +59,6 @@ def cs_sidebar():
 #df second
 #add visuals (heatmap+)
 #focus on progression
-
 import streamlit as st
 import pandas as pd
 import subprocess
@@ -71,7 +70,7 @@ def check_installed_packages():
 
 # Function to apply colors based on the 'dummy' column value
 def apply_color_logic(row, dummy_values):
-    return ['background-color: lightgreen' if cell_value <= dummy_value else '' for cell_value, dummy_value in zip(row, dummy_values)]
+    return ['background-color: lightgreen' if float(cell_value) <= float(dummy_value) else '' for cell_value, dummy_value in zip(row, dummy_values)]
 
 st.title("Data Career Path Level Up")
 
@@ -87,7 +86,7 @@ if file is not None:
         # Load Excel data from the specified sheet
         df = pd.read_excel(file, sheet_name='Sheet1')
 
-        # Extract the 'dummy' column
+        # Extract the 'dummy' column and convert to numeric
         dummy_column = pd.to_numeric(df['dummy'], errors='coerce')
 
         # Display domain buttons
@@ -106,7 +105,6 @@ if file is not None:
             st.dataframe(df.style.apply(apply_color_logic, dummy_values=dummy_column, axis=1))
     except Exception as e:
         st.error(f"An error occurred: {e}")
-
 
 
 
