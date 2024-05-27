@@ -59,6 +59,11 @@ def cs_sidebar():
 #df second
 #add visuals (heatmap+)
 #focus on progression
+
+
+
+
+
 import streamlit as st
 import pandas as pd
 import subprocess
@@ -93,6 +98,9 @@ if file is not None:
         if 'dummy' in df.columns:
             dummy_column = pd.to_numeric(df['dummy'], errors='coerce')
 
+            # Print out the values of the 'dummy' column for debugging
+            st.write(f"Values of the 'dummy' column: {dummy_column}")
+
             # Filter columns based on the selected domain
             filtered_columns = df.filter(like=selected_domain)
 
@@ -110,6 +118,7 @@ if file is not None:
             st.write("No 'dummy' column found in the original DataFrame.")
     except Exception as e:
         st.error(f"An error occurred: {e}")
+
 
 
 
