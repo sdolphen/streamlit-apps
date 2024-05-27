@@ -107,7 +107,9 @@ if file is not None:
                     return 'background-color: lightgreen' if cell_value <= dummy_value else ''
                 
                 # Apply conditional formatting using the function
-                styled_df = filtered_columns.style.applymap(lambda cell, dummy: apply_conditional_color(cell, dummy), subset=filtered_columns.columns[:-1], dummy=filtered_columns['dummy'])
+                styled_df = filtered_columns.style.applymap(lambda cell, dummy: apply_conditional_color(cell, dummy), 
+                                                            subset=filtered_columns.columns[:-1], 
+                                                            dummy=filtered_columns['dummy'].iloc[0])
                 st.write(styled_df)
             else:
                 st.write(f"No {selected_domain} columns found.")
@@ -115,6 +117,7 @@ if file is not None:
             st.write("No 'dummy' column found in the original DataFrame.")
     except Exception as e:
         st.error(f"An error occurred: {e}")
+
 
 
 
