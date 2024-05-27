@@ -94,6 +94,9 @@ if file is not None:
         dummy_column = pd.to_numeric(df['dummy'], errors='coerce')
 
         # Add the 'dummy' column to the filtered DataFrame for verification
+        st.write(f"Filtered DataFrame:")
+        st.write(filtered_columns)
+
         filtered_columns.loc[:, 'dummy'] = dummy_column
 
         # Display the filtered columns with conditional colors
