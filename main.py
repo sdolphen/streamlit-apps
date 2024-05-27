@@ -146,7 +146,9 @@ if file is not None:
                     # Use Streamlit's container to center the DataFrame view
                     with st.container():
                         st.markdown("<div class='dataframe-container'>", unsafe_allow_html=True)
-                        st.write(styled_df)
+                        st.markdown("<br><br>", unsafe_allow_html=True)  # Add spaces before the DataFrame
+                        st.write(f"Showing {display_name} data:")
+                        st.dataframe(styled_df, height=600)  # Adjust height to show more rows
                         st.markdown("</div>", unsafe_allow_html=True)
                 else:
                     st.write(f"No {display_name} columns found.")
@@ -162,6 +164,7 @@ if file is not None:
             st.write("No 'dummy' column found in the original DataFrame.")
     except Exception as e:
         st.error(f"An error occurred: {e}")
+
 
 
 
