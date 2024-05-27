@@ -57,6 +57,8 @@ def cs_sidebar():
 #df second
 #add visuals (heatmap+)
 #focus on progression
+
+
 import streamlit as st
 import pandas as pd
 import subprocess
@@ -80,54 +82,63 @@ if file is not None:
         # Load Excel data from the specified sheet
         df = pd.read_excel(file, sheet_name='Sheet1')
 
-        # Display domain buttons
-        st.subheader("Select Domain to Display:")
-        selected_domain = st.radio("For which domain do you want to improve?", ['AE', 'DS', 'AT'])
-
         # Extract the 'dummy' column and convert to numeric if it exists
         if 'dummy' in df.columns:
             dummy_column = pd.to_numeric(df['dummy'], errors='coerce')
 
-            # Filter columns based on the selected domain prefix
-            filtered_columns = df[[col for col in df.columns if col.startswith(selected_domain)]]
+            # Display domain buttons
+            st.subheader("Select Domain to Display:")
+            ae_button = st.button("AE")
+            ds_button = st.button("DS")
+            at_button = st.button("AT")
 
-            # Add the 'dummy' column to the filtered DataFrame and move it to the beginning
-            filtered_columns = filtered_columns.copy()
-            filtered_columns.insert(0, 'dummy', dummy_column)
+            def display_filtered_columns(domain_prefix):
+                # Filter columns based on the selected domain prefix
+                filtered_columns = df[[col for col in df.columns if col.startswith(domain_prefix)]]
 
-            # Rename columns by removing the domain prefix
-            filtered_columns.columns = ['dummy'] + [col[len(selected_domain):] for col in filtered_columns.columns[1:]]
+                # Add the 'dummy' column to the filtered DataFrame and move it to the beginning
+                filtered_columns = filtered_columns.copy()
+                filtered_columns.insert(0, 'dummy', dummy_column)
 
-            # Display the filtered columns with conditional colors
-            if not filtered_columns.empty:
-                st.write(f"{selected_domain} Columns with conditional background color:")
-                
-                # Define a function to apply conditional formatting
-                def apply_conditional_color(row):
-                    dummy_value = row['dummy']
-                    return ['background-color: lightgreen' if cell_value <= dummy_value else '' for cell_value in row]
+                # Rename columns by removing the domain prefix
+                filtered_columns.columns = ['dummy'] + [col[len(domain_prefix):] for col in filtered_columns.columns[1:]]
 
-                # Apply conditional formatting using the function
-                styled_df = filtered_columns.style.apply(apply_conditional_color, axis=1)
+                # Display the filtered columns with conditional colors
+                if not filtered_columns.empty:
+                    st.write(f"{domain_prefix} Columns with conditional background color:")
 
-                # Add 'Level ' prefix to each cell value
-                def add_level_prefix(val):
-                    try:
-                        return f"Level {int(val)}"
-                    except ValueError:
-                        return val
+                    # Define a function to apply conditional formatting
+                    def apply_conditional_color(row):
+                        dummy_value = row['dummy']
+                        return ['background-color: lightgreen' if cell_value <= dummy_value else '' for cell_value in row]
 
-                styled_df = styled_df.format(add_level_prefix)
-                
-                st.write(styled_df)
-            else:
-                st.write(f"No {selected_domain} columns found.")
+                    # Apply conditional formatting using the function
+                    styled_df = filtered_columns.style.apply(apply_conditional_color, axis=1)
+
+                    # Add 'Level ' prefix to each cell value
+                    def add_level_prefix(val):
+                        try:
+                            return f"Level {int(val)}"
+                        except ValueError:
+                            return val
+
+                    styled_df = styled_df.format(add_level_prefix)
+
+                    st.write(styled_df)
+                else:
+                    st.write(f"No {domain_prefix} columns found.")
+
+            # Display the DataFrame based on the button clicked
+            if ae_button:
+                display_filtered_columns('AE')
+            elif ds_button:
+                display_filtered_columns('DS')
+            elif at_button:
+                display_filtered_columns('AT')
         else:
             st.write("No 'dummy' column found in the original DataFrame.")
     except Exception as e:
         st.error(f"An error occurred: {e}")
-
-
 
 
 
