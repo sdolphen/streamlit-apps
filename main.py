@@ -73,7 +73,10 @@ def check_installed_packages():
 def apply_color_logic(value, dummy_value):
     try:
         value = float(value)
-        return 'background-color: lightgreen' if value <= dummy_value else ''
+        condition = value <= dummy_value
+        color = 'lightgreen' if condition else ''
+        st.write(f"Value: {value}, Dummy Value: {dummy_value}, Condition: {condition}, Color: {color}")
+        return f'background-color: {color}'
     except ValueError:
         return ''
 
@@ -107,13 +110,13 @@ if file is not None:
         # Display the filtered columns with conditional colors
         if not filtered_columns.empty:
             st.write(f"{selected_domain} Columns with conditional background color:")
-            # Exclude 'dummy' column when applying conditional coloring
             styled_df = filtered_columns.style.applymap(lambda value: apply_color_logic(value, filtered_columns['dummy']), subset=pd.IndexSlice[:, filtered_columns.columns != 'dummy'])
             st.dataframe(styled_df)
         else:
             st.write(f"No {selected_domain} columns found.")
     except Exception as e:
         st.error(f"An error occurred: {e}")
+
 
 
 
