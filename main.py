@@ -62,15 +62,15 @@ import pandas as pd
 import subprocess
 
 # Function to check installed packages
-def check_installed_packages():
-    installed_packages = subprocess.check_output(['pip', 'freeze']).decode('utf-8')
-    return installed_packages
+#def check_installed_packages():
+#    installed_packages = subprocess.check_output(['pip', 'freeze']).decode('utf-8')
+#    return installed_packages
 
-st.title("Data Career Path Level Up")
+st.title("Career Path Analyzer")
 
 # Display installed packages
-st.write("Installed Packages:")
-st.text(check_installed_packages())
+st.write("Let's take a closer look at your skillmatrix and the most interesting domains to focus on in the future")
+#st.text(check_installed_packages())
 
 # Custom CSS to style the buttons and center the DataFrame
 st.markdown("""
@@ -100,6 +100,9 @@ if file is not None:
         # Extract the 'dummy' column and convert to numeric if it exists
         if 'dummy' in df.columns:
             dummy_column = pd.to_numeric(df['dummy'], errors='coerce')
+            
+
+            st.markdown("<br>", unsafe_allow_html=True)  # Add spaces before the buttons
 
             # Create three columns for the buttons to be placed next to each other
             col1, col2, col3 = st.columns(3)
@@ -146,7 +149,7 @@ if file is not None:
                     # Use Streamlit's container to center the DataFrame view
                     with st.container():
                         st.markdown("<div class='dataframe-container'>", unsafe_allow_html=True)
-                        st.markdown("<br><br>", unsafe_allow_html=True)  # Add spaces before the DataFrame
+                        st.markdown("<br>", unsafe_allow_html=True)  # Add spaces before the DataFrame
                         st.write(f"Showing {display_name} data:")
                         st.dataframe(styled_df, height=600)  # Adjust height to show more rows
                         st.markdown("</div>", unsafe_allow_html=True)
