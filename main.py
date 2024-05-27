@@ -57,11 +57,12 @@ def cs_sidebar():
 #add visuals (heatmap+)
 #focus on progression
 
-
 import streamlit as st
 import pandas as pd
 import subprocess
 
+# Set Streamlit to wide mode
+st.set_page_config(layout="wide")
 
 # Function to check installed packages
 def check_installed_packages():
@@ -73,6 +74,23 @@ st.title("Data Career Path Level Up")
 # Display installed packages
 st.write("Installed Packages:")
 st.text(check_installed_packages())
+
+# Custom CSS to style the buttons and center the DataFrame
+st.markdown("""
+    <style>
+    .stButton>button {
+        background-color: grey;
+        color: white;
+    }
+    .dataframe-container {
+        display: flex;
+        justify-content: center;
+    }
+    .dataframe-container .stDataFrame {
+        width: 80%;
+    }
+    </style>
+    """, unsafe_allow_html=True)
 
 # File uploader
 file = st.file_uploader("Upload Your Personal Career Path Excel file", type=['xlsx'])
@@ -128,9 +146,11 @@ if file is not None:
 
                     styled_df = styled_df.format(add_level_prefix)
 
-                    # Use Streamlit's container to expand the DataFrame view
+                    # Use Streamlit's container to center the DataFrame view
                     with st.container():
+                        st.markdown("<div class='dataframe-container'>", unsafe_allow_html=True)
                         st.write(styled_df)
+                        st.markdown("</div>", unsafe_allow_html=True)
                 else:
                     st.write(f"No {display_name} columns found.")
 
@@ -145,6 +165,7 @@ if file is not None:
             st.write("No 'dummy' column found in the original DataFrame.")
     except Exception as e:
         st.error(f"An error occurred: {e}")
+
 
 
 
