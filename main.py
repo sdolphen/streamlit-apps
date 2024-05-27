@@ -52,8 +52,6 @@ def cs_sidebar():
     
 
 
-
-
 ## APPLICATION FOR INPUT/OUTPUT 
 #button first
 #df second
@@ -155,5 +153,5 @@ if file is not None:
     #add dynamic or simply space between the two parts, frames?
 
 
-# Run main()
-
+if __name__ == '__main__':
+    main()
