@@ -59,6 +59,8 @@ def cs_sidebar():
 #df second
 #add visuals (heatmap+)
 #focus on progression
+
+
 import streamlit as st
 import pandas as pd
 import subprocess
@@ -69,8 +71,8 @@ def check_installed_packages():
     return installed_packages
 
 # Function to apply colors based on the 'dummy' column value
-def apply_color_logic(row, dummy_values):
-    return ['background-color: lightgreen' if float(cell_value) <= float(dummy_value) else '' for cell_value, dummy_value in zip(row, dummy_values)]
+def apply_color_logic(row, dummy_value):
+    return ['background-color: lightgreen' if pd.to_numeric(cell_value, errors='coerce') <= dummy_value else '' for cell_value in row]
 
 st.title("Data Career Path Level Up")
 
@@ -86,9 +88,6 @@ if file is not None:
         # Load Excel data from the specified sheet
         df = pd.read_excel(file, sheet_name='Sheet1')
 
-        # Filter out only the necessary columns containing 'AE', 'AT', 'DS', or 'dummy'
-        relevant_columns = df.filter(like='AE') + df.filter(like='AT') + df.filter(like='DS') + df.filter(like='dummy')
-
         # Extract the 'dummy' column and convert to numeric
         dummy_column = pd.to_numeric(df['dummy'], errors='coerce')
 
@@ -96,10 +95,15 @@ if file is not None:
         st.subheader("Select Domain to Display:")
         selected_domain = st.radio("For which domain do you want to improve?", ['AE', 'DS', 'AT'])
 
+        # Filter columns based on the selected domain
+        filtered_columns = df.filter(like=selected_domain)
+
         # Display the filtered columns with conditional colors
-        if selected_domain in ['AE', 'DS', 'AT']:
+        if not filtered_columns.empty:
             st.write(f"{selected_domain} Columns:")
-            st.dataframe(relevant_columns.style.apply(apply_color_logic, dummy_values=dummy_column, axis=1))
+            st.dataframe(filtered_columns.style.apply(apply_color_logic, dummy_value=dummy_column, axis=1))
+        else:
+            st.write(f"No {selected_domain} columns found.")
     except Exception as e:
         st.error(f"An error occurred: {e}")
 
