@@ -86,6 +86,9 @@ if file is not None:
         # Load Excel data from the specified sheet
         df = pd.read_excel(file, sheet_name='Sheet1')
 
+        # Filter out only the necessary columns containing 'AE', 'AT', 'DS', or 'dummy'
+        relevant_columns = df.filter(like='AE') + df.filter(like='AT') + df.filter(like='DS') + df.filter(like='dummy')
+
         # Extract the 'dummy' column and convert to numeric
         dummy_column = pd.to_numeric(df['dummy'], errors='coerce')
 
@@ -94,15 +97,9 @@ if file is not None:
         selected_domain = st.radio("For which domain do you want to improve?", ['AE', 'DS', 'AT'])
 
         # Display the filtered columns with conditional colors
-        if selected_domain == 'AE':
-            st.write("AE Columns:")
-            st.dataframe(df.style.apply(apply_color_logic, dummy_values=dummy_column, axis=1))
-        elif selected_domain == 'DS':
-            st.write("DS Columns:")
-            st.dataframe(df.style.apply(apply_color_logic, dummy_values=dummy_column, axis=1))
-        elif selected_domain == 'AT':
-            st.write("AT Columns:")
-            st.dataframe(df.style.apply(apply_color_logic, dummy_values=dummy_column, axis=1))
+        if selected_domain in ['AE', 'DS', 'AT']:
+            st.write(f"{selected_domain} Columns:")
+            st.dataframe(relevant_columns.style.apply(apply_color_logic, dummy_values=dummy_column, axis=1))
     except Exception as e:
         st.error(f"An error occurred: {e}")
 
