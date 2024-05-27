@@ -59,6 +59,8 @@ def cs_sidebar():
 #focus on progression
 
 
+
+
 import streamlit as st
 import pandas as pd
 import subprocess
@@ -67,6 +69,8 @@ import subprocess
 def check_installed_packages():
     installed_packages = subprocess.check_output(['pip', 'freeze']).decode('utf-8')
     return installed_packages
+
+st.set_page_config(layout="wide")  # Set Streamlit to wide mode
 
 st.title("Data Career Path Level Up")
 
@@ -86,13 +90,17 @@ if file is not None:
         if 'dummy' in df.columns:
             dummy_column = pd.to_numeric(df['dummy'], errors='coerce')
 
-            # Display domain buttons
-            st.subheader("Select Domain to Display:")
-            ae_button = st.button("AE")
-            ds_button = st.button("DS")
-            at_button = st.button("AT")
+            # Create three columns for the buttons to be placed next to each other
+            col1, col2, col3 = st.columns(3)
 
-            def display_filtered_columns(domain_prefix):
+            with col1:
+                ae_button = st.button("Analytics Engineer")
+            with col2:
+                ds_button = st.button("Data Strategy")
+            with col3:
+                at_button = st.button("Analytics Translator")
+
+            def display_filtered_columns(domain_prefix, display_name):
                 # Filter columns based on the selected domain prefix
                 filtered_columns = df[[col for col in df.columns if col.startswith(domain_prefix)]]
 
@@ -105,7 +113,7 @@ if file is not None:
 
                 # Display the filtered columns with conditional colors
                 if not filtered_columns.empty:
-                    st.write(f"{domain_prefix} Columns with conditional background color:")
+                    st.write(f"{display_name} Columns with conditional background color:")
 
                     # Define a function to apply conditional formatting
                     def apply_conditional_color(row):
@@ -124,21 +132,25 @@ if file is not None:
 
                     styled_df = styled_df.format(add_level_prefix)
 
-                    st.write(styled_df)
+                    # Use Streamlit's container to expand the DataFrame view
+                    with st.container():
+                        st.write(styled_df)
                 else:
-                    st.write(f"No {domain_prefix} columns found.")
+                    st.write(f"No {display_name} columns found.")
 
             # Display the DataFrame based on the button clicked
             if ae_button:
-                display_filtered_columns('AE')
+                display_filtered_columns('AE', 'Analytics Engineer')
             elif ds_button:
-                display_filtered_columns('DS')
+                display_filtered_columns('DS', 'Data Strategy')
             elif at_button:
-                display_filtered_columns('AT')
+                display_filtered_columns('AT', 'Analytics Translator')
         else:
             st.write("No 'dummy' column found in the original DataFrame.")
     except Exception as e:
         st.error(f"An error occurred: {e}")
+
+
 
 
 
