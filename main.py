@@ -56,7 +56,6 @@ def cs_sidebar():
 #df second
 #add visuals (heatmap+)
 #focus on progression
-
 import streamlit as st
 import pandas as pd
 import subprocess
@@ -85,7 +84,7 @@ st.markdown("""
     }
     .dataframe-container {
         display: flex;
-        justify-content: space-around;
+        justify-content: center;
     }
     .dataframe-container .stDataFrame {
         width: 45%;
@@ -130,17 +129,52 @@ if file is not None:
                 filtered_columns.insert(0, 'subdomain', subdomain_column)
 
                 # Split the DataFrame based on the 'domain' column
-                consulting_df = filtered_columns[domain_column == 'Consulting'].reset_index(drop=True)
-                bu_skills_df = filtered_columns[domain_column == 'BU Skills'].reset_index
+                consulting_df = filtered_columns[domain_column == 'Consulting']
+                bu_skills_df = filtered_columns[domain_column == 'BU Skills']
 
+                # Rename columns by removing the domain prefix
+                consulting_df.columns = ['subdomain', 'topic', 'dummy'] + [col[len(domain_prefix):] for col in consulting_df.columns[3:]]
+                bu_skills_df.columns = ['subdomain', 'topic', 'dummy'] + [col[len(domain_prefix):] for col in bu_skills_df.columns[3:]]
 
+                def apply_conditional_color(row):
+                    dummy_value = row['dummy']
+                    return ['background-color: lightgreen' if isinstance(cell_value, (int, float)) and cell_value <= dummy_value else '' for cell_value in row]
 
+                def add_level_prefix(val):
+                    try:
+                        return f"Level {int(val)}"
+                    except ValueError:
+                        return val
 
+                consulting_df_styled = consulting_df.style.apply(apply_conditional_color, axis=1).format(add_level_prefix)
+                bu_skills_df_styled = bu_skills_df.style.apply(apply_conditional_color, axis=1).format(add_level_prefix)
 
+                if not consulting_df.empty:
+                    st.write(f"{display_name} - Consulting:")
+                    with st.container():
+                        st.markdown("<div class='dataframe-container'>", unsafe_allow_html=True)
+                        st.markdown("<br><br>", unsafe_allow_html=True)  # Add spaces before the DataFrame
+                        st.dataframe(consulting_df_styled, height=600)  # Adjust height to show more rows
+                        st.markdown("</div>", unsafe_allow_html=True)
 
+                if not bu_skills_df.empty:
+                    st.write(f"{display_name} - BU Skills:")
+                    with st.container():
+                        st.markdown("<div class='dataframe-container'>", unsafe_allow_html=True)
+                        st.markdown("<br><br>", unsafe_allow_html=True)  # Add spaces before the DataFrame
+                        st.dataframe(bu_skills_df_styled, height=600)  # Adjust height to show more rows
+                        st.markdown("</div>", unsafe_allow_html=True)
 
-
-
+            if ae_button:
+                display_filtered_columns('AE', 'Analytics Engineer')
+            elif ds_button:
+                display_filtered_columns('DS', 'Data Strategy')
+            elif at_button:
+                display_filtered_columns('AT', 'Analytics Translator')
+        else:
+            st.write("Necessary columns ('dummy', 'topic', 'domain', 'subdomain') not found in the original DataFrame.")
+    except Exception as e:
+        st.error(f"An error occurred: {e}")
 
 
         # remove info over current and next level!!
