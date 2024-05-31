@@ -56,23 +56,21 @@ def cs_sidebar():
 #df second
 #add visuals (heatmap+)
 #focus on progression
+
 import streamlit as st
 import pandas as pd
 import subprocess
 
-# Set Streamlit to wide mode
-st.set_page_config(layout="wide")
-
 # Function to check installed packages
-def check_installed_packages():
-    installed_packages = subprocess.check_output(['pip', 'freeze']).decode('utf-8')
-    return installed_packages
+#def check_installed_packages():
+#    installed_packages = subprocess.check_output(['pip', 'freeze']).decode('utf-8')
+#    return installed_packages
 
-st.title("Data Career Path Level Up")
+st.title("Career Path Analyzer")
 
 # Display installed packages
-st.write("Installed Packages:")
-st.text(check_installed_packages())
+st.write("Let's take a closer look at your skillmatrix and the most interesting domains to focus on in the future")
+#st.text(check_installed_packages())
 
 # Custom CSS to style the buttons and center the DataFrame
 st.markdown("""
@@ -80,15 +78,13 @@ st.markdown("""
     .stButton>button {
         background-color: grey;
         color: white;
-        margin-right: 10px;
     }
     .dataframe-container {
         display: flex;
         justify-content: center;
     }
     .dataframe-container .stDataFrame {
-        width: 45%;
-        margin: 10px;
+        width: 80%;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -100,13 +96,19 @@ if file is not None:
     try:
         # Load Excel data from the specified sheet
         df = pd.read_excel(file, sheet_name='Sheet1')
+        st.write("You're career path is successfully uploaded!")
 
-        # Check for necessary columns
-        if all(col in df.columns for col in ['dummy', 'topic', 'domain', 'subdomain']):
+        # Extract the 'dummy' column and convert to numeric if it exists
+        if 'dummy' in df.columns:
+            dummy_column = pd.to_numeric(df['dummy'], errors='coerce')
+            
+            # Extract the 'dummy' column and convert to numeric if it exists
+        if 'dummy' in df.columns and 'topic' in df.columns:
             dummy_column = pd.to_numeric(df['dummy'], errors='coerce')
             topic_column = df['topic']
-            domain_column = df['domain']
-            subdomain_column = df['subdomain']
+
+            st.markdown("<br><br>", unsafe_allow_html=True)  # Add spaces before the buttons
+            st.write("Let's now choose one of the carreer tracks in our unit to analyze our current skill progression")
 
             # Create three columns for the buttons to be placed next to each other
             col1, col2, col3 = st.columns(3)
@@ -122,49 +124,48 @@ if file is not None:
                 # Filter columns based on the selected domain prefix
                 filtered_columns = df[[col for col in df.columns if col.startswith(domain_prefix)]]
 
-                # Add the 'subdomain', 'topic', and 'dummy' columns to the filtered DataFrame
+                # Add the 'dummy' column to the filtered DataFrame and move it to the beginning
                 filtered_columns = filtered_columns.copy()
                 filtered_columns.insert(0, 'dummy', dummy_column)
                 filtered_columns.insert(0, 'topic', topic_column)
-                filtered_columns.insert(0, 'subdomain', subdomain_column)
-
-                # Split the DataFrame based on the 'domain' column
-                consulting_df = filtered_columns[domain_column == 'Consulting']
-                bu_skills_df = filtered_columns[domain_column == 'BU Skills']
 
                 # Rename columns by removing the domain prefix
-                consulting_df.columns = ['subdomain', 'topic', 'dummy'] + [col[len(domain_prefix):] for col in consulting_df.columns[3:]]
-                bu_skills_df.columns = ['subdomain', 'topic', 'dummy'] + [col[len(domain_prefix):] for col in bu_skills_df.columns[3:]]
+                filtered_columns.columns = ['topic', 'dummy'] + [col[len(domain_prefix):] for col in filtered_columns.columns[2:]]
 
-                def apply_conditional_color(row):
-                    dummy_value = row['dummy']
-                    return ['background-color: lightgreen' if isinstance(cell_value, (int, float)) and cell_value <= dummy_value else '' for cell_value in row]
+                # Display the filtered columns with conditional colors
+                if not filtered_columns.empty:
+                    st.write(f"{display_name} track skill progression will be showed below:")
 
-                def add_level_prefix(val):
-                    try:
-                        return f"Level {int(val)}"
-                    except ValueError:
-                        return val
+                    # Define a function to apply conditional formatting
+                    def apply_conditional_color(row):
+                        dummy_value = row['dummy']
+                        return ['background-color: lightgreen' if isinstance(cell_value, (int, float)) and cell_value <= dummy_value else '' for cell_value in row]
 
-                consulting_df_styled = consulting_df.style.apply(apply_conditional_color, axis=1).format(add_level_prefix)
-                bu_skills_df_styled = bu_skills_df.style.apply(apply_conditional_color, axis=1).format(add_level_prefix)
+                    # Apply conditional formatting using the function
+                    styled_df = filtered_columns.style.apply(apply_conditional_color, axis=1)
 
-                if not consulting_df.empty:
-                    st.write(f"{display_name} - Consulting:")
+                    # Add 'Level ' prefix to each cell value
+                    def add_level_prefix(val):
+                        try:
+                            return f"Level {int(val)}"
+                        except ValueError:
+                            return val
+
+                    styled_df = styled_df.format(add_level_prefix)
+
+                    styled_df = styled_df.format(add_level_prefix)
+
+                    # Use Streamlit's container to center the DataFrame view
                     with st.container():
                         st.markdown("<div class='dataframe-container'>", unsafe_allow_html=True)
-                        st.markdown("<br><br>", unsafe_allow_html=True)  # Add spaces before the DataFrame
-                        st.dataframe(consulting_df_styled, height=600)  # Adjust height to show more rows
+                        #st.markdown("<br>", unsafe_allow_html=True)  # Add spaces before the DataFrame
+                        st.write(f"Showing {display_name} progression:")
+                        st.dataframe(styled_df, height=600)  # Adjust height to show more rows
                         st.markdown("</div>", unsafe_allow_html=True)
+                else:
+                    st.write(f"No {display_name} columns found.")
 
-                if not bu_skills_df.empty:
-                    st.write(f"{display_name} - BU Skills:")
-                    with st.container():
-                        st.markdown("<div class='dataframe-container'>", unsafe_allow_html=True)
-                        st.markdown("<br><br>", unsafe_allow_html=True)  # Add spaces before the DataFrame
-                        st.dataframe(bu_skills_df_styled, height=600)  # Adjust height to show more rows
-                        st.markdown("</div>", unsafe_allow_html=True)
-
+            # Display the DataFrame based on the button clicked
             if ae_button:
                 display_filtered_columns('AE', 'Analytics Engineer')
             elif ds_button:
@@ -172,9 +173,19 @@ if file is not None:
             elif at_button:
                 display_filtered_columns('AT', 'Analytics Translator')
         else:
-            st.write("Necessary columns ('dummy', 'topic', 'domain', 'subdomain') not found in the original DataFrame.")
+            st.write("No 'dummy' column found in the original DataFrame.")
     except Exception as e:
         st.error(f"An error occurred: {e}")
+
+
+
+
+
+
+
+
+
+
 
 
         # remove info over current and next level!!
