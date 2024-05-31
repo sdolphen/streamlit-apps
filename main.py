@@ -118,11 +118,11 @@ def main():
                     # Display the DataFrames side by side
                     st.write(f"{display_name} - Consulting and BU Skills")
                     col4, col5 = st.columns(2)
-                    with col4:
+                    with col5:
                         st.markdown("<div class='dataframe-container'>", unsafe_allow_html=True)
                         st.dataframe(consulting_df_styled, height=min(400, 30 * len(consulting_df)))  # Adjust height based on the number of rows
                         st.markdown("</div>", unsafe_allow_html=True)
-                    with col5:
+                    with col4:
                         st.markdown("<div class='dataframe-container'>", unsafe_allow_html=True)
                         st.dataframe(bu_skills_df_styled, height=min(400, 30 * len(bu_skills_df)))  # Adjust height based on the number of rows
                         st.markdown("</div>", unsafe_allow_html=True)
