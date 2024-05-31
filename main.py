@@ -116,7 +116,8 @@ def main():
                     bu_skills_df_styled = bu_skills_df.style.apply(apply_conditional_color, axis=1).format(add_level_prefix)
 
                     # Display the DataFrames side by side
-                    st.write(f"{display_name} - Consulting and BU Skills")
+                    st.markdown("<br><br>", unsafe_allow_html=True)  # Add spaces before the buttons
+                    st.write(f"{display_name} - BU Skills (left) and Consulting Skills (right)")
                     col4, col5 = st.columns(2)
                     with col5:
                         st.markdown("<div class='dataframe-container'>", unsafe_allow_html=True)
