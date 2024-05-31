@@ -56,12 +56,13 @@ def cs_sidebar():
 #df second
 #add visuals (heatmap+)
 #focus on progression
+
 import streamlit as st
 import pandas as pd
 import subprocess
 
 # Set Streamlit to wide mode
-#st.set_page_config(layout="wide")
+st.set_page_config(layout="wide")
 
 # Function to check installed packages
 def check_installed_packages():
@@ -130,32 +131,7 @@ if file is not None:
 
                 # Split the DataFrame based on the 'domain' column
                 consulting_df = filtered_columns[domain_column == 'Consulting'].reset_index(drop=True)
-                bu_skills_df = filtered_columns[domain_column == 'BU Skills'].reset_index(drop=True)
-
-                # Apply conditional coloring function
-                def apply_conditional_color(val, dummy_val):
-                    return 'background-color: lightgreen' if val <= dummy_val else ''
-
-                # Apply the coloring to both dataframes
-                consulting_df_styled = consulting_df.style.applymap(lambda val: apply_conditional_color(val, consulting_df['dummy']), subset=pd.IndexSlice[:, 3:])
-                bu_skills_df_styled = bu_skills_df.style.applymap(lambda val: apply_conditional_color(val, bu_skills_df['dummy']), subset=pd.IndexSlice[:, 3:])
-
-                # Add 'Level ' prefix to all cells
-                consulting_df_styled = consulting_df_styled.format(lambda val: f'Level {val}' if isinstance(val, (int, float)) else val)
-                bu_skills_df_styled = bu_skills_df_styled.format(lambda val: f'Level {val}' if isinstance(val, (int, float)) else val)
-
-                # Display the DataFrames side by side
-                st.markdown(f"### {display_name}")
-                col4, col5 = st.columns(2)
-                with col4:
-                    st.dataframe(consulting_df_styled)
-                with col5:
-                    st.dataframe(bu_skills_df_styled)
-
-            if ae_button:
-                display_filtered_columns('AE', 'Analytics Engineer')
-            if ds_button:
-                display_filtered
+                bu_skills_df = filtered_columns[domain_column == 'BU Skills'].reset_index
 
 
 
