@@ -6,6 +6,7 @@ import base64
 # Set Streamlit to wide mode
 #st.set_page_config(layout="wide")
 st.set_page_config(
+layout='wide'
 page_title= "Career path",
 page_icon="./icons/datarootsicon.ico"
 )
