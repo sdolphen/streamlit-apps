@@ -21,15 +21,15 @@ def img_to_bytes(img_path):
 def cs_sidebar():
     st.sidebar.markdown('''[<img src='data:image/png;base64,{}' class='img-fluid' width=170 height=32>](https://streamlit.io/)'''.format(img_to_bytes("dataroots-logo.png")), unsafe_allow_html=True)
     st.sidebar.header('Career path')
-    st.sidebar.markdown(''' Career paths are journeys that our team members can follow within a specific role to progress and advance in their careers. These paths outline the various stages, skills, and experiences required for advancement within a particular role. Career paths provide a structured framework for our team members to plan and navigate their professional development journey, from entry-level positions to more senior or specialized roles.  ''', unsafe_allow_html=True)
+    st.sidebar.markdown(''' Dear data strategist, We believe that building and nurturing our coaching culture is the most effective way to help you develop as a professional, one who provides excellent services to our clients and works closely with other colleagues. This is how we bring to life one of our Dataroots values:   ''', unsafe_allow_html=True)
     st.sidebar.markdown('__First, complete your own skill matrix evaluation__')
     st.sidebar.code('skillmatrix_dsu.xlsx')
     st.sidebar.markdown('__Instructions to use the app__')
     st.sidebar.markdown('You can visualize the progress you have made for every career path you want to explore. Please start by uploading your own skill matrix file.')
     st.sidebar.markdown('When the file is successfully uploaded, you can select the career path you want to explore to analyze your own skill progression.')
-    st.sidebar.markdown('<small>Learn more about [career path levels](https://docs.streamlit.io/library/advanced-features/prerelease#beta-and-experimental-features)</small>', unsafe_allow_html=True)
+    st.sidebar.markdown('<small>Learn more about [career path levels](https://www.notion.so/dataroots/Data-Strategy-Career-Paths-0cf86c06e86449329726f6b35457af23)</small>', unsafe_allow_html=True)
     st.sidebar.markdown('''<hr>''', unsafe_allow_html=True)
-    st.sidebar.markdown('''<small>[Career path sheet](https://github.com/daniellewisDL/streamlit-cheat-sheet)  | June 2024 | [Dataroots](https://dataroots.io/)</small>''', unsafe_allow_html=True)
+    st.sidebar.markdown('''<small>[DS Skill Matrix](https://www.notion.so/dataroots/Data-Strategy-Skill-Matrix-Trailblazer-0136004de9e44086a93b18b3035b2744)  | June 2024 | [Dataroots](https://dataroots.io/)</small>''', unsafe_allow_html=True)
 
 # Function to read and validate the uploaded file
 def read_uploaded_file(uploaded_file):
