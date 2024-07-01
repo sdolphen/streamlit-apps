@@ -7,7 +7,7 @@ import base64
 st.set_page_config(
     layout="wide",
     page_title="Career path",
-    page_icon="./dataroots-logo.png"
+    page_icon="./icons/datarootsicon.ico"
 )
 
 # Function to convert image to bytes
@@ -79,12 +79,12 @@ def display_filtered_columns(df, domain_prefix, display_name):
     st.markdown("<br><br>", unsafe_allow_html=True)
     st.write(f"{display_name} - Consulting Skills")
     st.markdown("<div class='dataframe-container'>", unsafe_allow_html=True)
-    st.dataframe(consulting_df_styled, use_container_width=True)
+    st.dataframe(consulting_df_styled, use_container_width=True, height=400 + len(consulting_df) * 20)
     st.markdown("</div>", unsafe_allow_html=True)
     
     st.write(f"{display_name} - BU Skills")
     st.markdown("<div class='dataframe-container'>", unsafe_allow_html=True)
-    st.dataframe(bu_skills_df_styled, use_container_width=True)
+    st.dataframe(bu_skills_df_styled, use_container_width=True, height=400 + len(bu_skills_df) * 20)
     st.markdown("</div>", unsafe_allow_html=True)
 
 # Main function to run the app
