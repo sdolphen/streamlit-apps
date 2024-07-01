@@ -20,7 +20,7 @@ def img_to_bytes(img_path):
 def cs_sidebar():
     st.sidebar.markdown('''[<img src='data:image/png;base64,{}' class='img-fluid' width=170 height=32>](https://streamlit.io/)'''.format(img_to_bytes("dataroots-logo.png")), unsafe_allow_html=True)
     st.sidebar.header('Career path')
-    st.sidebar.markdown(''' Dear data strategist, We believe that building and nurturing our coaching culture is the most effective way to help you develop as a professional, one who provides excellent services to our clients and works closely with other colleagues.''', unsafe_allow_html=True)
+    st.sidebar.markdown(''' Dear data strategist, We believe that building and nurturing our coaching culture is the most effective way to help you develop as a professional, one who provides excellent services to our clients and works closely with other colleagues. This is how we bring to life one of our Dataroots values:   ''', unsafe_allow_html=True)
     st.sidebar.markdown('__First, complete your own skill matrix evaluation__')
     st.sidebar.code('CP - DS Self Evaluation.xlsx')
     st.sidebar.markdown('__Instructions to use the app__')
@@ -65,7 +65,7 @@ def display_filtered_columns(df, domain_prefix, display_name):
 
     def apply_conditional_color(row):
         reference_value = row['reference']
-        return ['background-color: #465DAA' if col_name == 'reference' else 'background-color: #18AC86' if isinstance(cell_value, (int, float)) and cell_value <= reference_value else '' for col_name, cell_value in row.items()]
+        return ['background-color: #465DAA' if col_name == 'reference' else 'background-color: lightgreen' if isinstance(cell_value, (int, float)) and cell_value <= reference_value else '' for col_name, cell_value in row.items()]
 
     def add_level_prefix(val):
         try:
@@ -92,13 +92,13 @@ def display_filtered_columns(df, domain_prefix, display_name):
 def main():
     cs_sidebar()
 
-    st.title("Career Path Analyzer 2")
+    st.title("Career Path Analyzer")
     st.write("Let's take a closer look at your skillmatrix and the most interesting domains to focus on in the future")
 
     st.markdown("""
         <style>
         .stButton>button {
-            background-color: grey;
+            background-color: 465DAA;
             color: white;
         }
         .dataframe-container {
@@ -117,7 +117,7 @@ def main():
     if file is not None:
         df = read_uploaded_file(file)
         if df is not None:
-            st.code("file successfully uploaded!")
+            st.code("Your career path is successfully uploaded!")
             st.markdown("<br>", unsafe_allow_html=True)
             st.write("Let's now choose one of the career tracks in our unit to analyze our current skill progression")
 
