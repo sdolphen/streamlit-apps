@@ -65,7 +65,7 @@ def display_filtered_columns(df, domain_prefix, display_name):
 
     def apply_conditional_color(row):
         reference_value = row['reference']
-        return ['background-color: #465DAA' if col_name == 'reference' else 'background-color: lightgreen' if isinstance(cell_value, (int, float)) and cell_value <= reference_value else '' for col_name, cell_value in row.items()]
+        return ['background-color: #d3d3d3' if col_name == 'reference' else 'background-color: lightgreen' if isinstance(cell_value, (int, float)) and cell_value <= reference_value else '' for col_name, cell_value in row.items()]
 
     def add_level_prefix(val):
         try:
@@ -77,16 +77,15 @@ def display_filtered_columns(df, domain_prefix, display_name):
     bu_skills_df_styled = bu_skills_df.style.apply(apply_conditional_color, axis=1).format(add_level_prefix)
 
     st.markdown("<br><br>", unsafe_allow_html=True)
-    st.write(f"{display_name} - BU Skills (left) and Consulting Skills (right)")
-    col4, col5 = st.columns(2)
-    with col5:
-        st.markdown("<div class='dataframe-container'>", unsafe_allow_html=True)
-        st.dataframe(consulting_df_styled, height=min(400, 30 * len(consulting_df)))
-        st.markdown("</div>", unsafe_allow_html=True)
-    with col4:
-        st.markdown("<div class='dataframe-container'>", unsafe_allow_html=True)
-        st.dataframe(bu_skills_df_styled, height=min(400, 30 * len(bu_skills_df)))
-        st.markdown("</div>", unsafe_allow_html=True)
+    st.write(f"{display_name} - Consulting Skills")
+    st.markdown("<div class='dataframe-container'>", unsafe_allow_html=True)
+    st.dataframe(consulting_df_styled, use_container_width=True)
+    st.markdown("</div>", unsafe_allow_html=True)
+    
+    st.write(f"{display_name} - BU Skills")
+    st.markdown("<div class='dataframe-container'>", unsafe_allow_html=True)
+    st.dataframe(bu_skills_df_styled, use_container_width=True)
+    st.markdown("</div>", unsafe_allow_html=True)
 
 # Main function to run the app
 def main():
@@ -98,16 +97,17 @@ def main():
     st.markdown("""
         <style>
         .stButton>button {
-            background-color: 465DAA;
+            background-color: grey;
             color: white;
         }
         .dataframe-container {
             display: flex;
             justify-content: center;
+            width: 100%;
         }
         .dataframe-container .stDataFrame {
-            width: 45%;
-            margin: 10px;
+            width: 100%;
+            margin: 10px 0;
         }
         </style>
         """, unsafe_allow_html=True)
