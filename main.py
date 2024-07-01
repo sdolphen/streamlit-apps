@@ -23,7 +23,7 @@ def cs_sidebar():
     st.sidebar.header('Career path')
     st.sidebar.markdown(''' Dear data strategist, We believe that building and nurturing our coaching culture is the most effective way to help you develop as a professional, one who provides excellent services to our clients and works closely with other colleagues. This is how we bring to life one of our Dataroots values:   ''', unsafe_allow_html=True)
     st.sidebar.markdown('__First, complete your own skill matrix evaluation__')
-    st.sidebar.code('Career Path - DS Self Evaluation.xlsx')
+    st.sidebar.code('Career Path - <br> DS Self Evaluation.xlsx')
     st.sidebar.markdown('__Instructions to use the app__')
     st.sidebar.markdown('You can visualize the progress you have made for every career path you want to explore. Please start by uploading your own skill matrix file.')
     st.sidebar.markdown('When the file is successfully uploaded, you can select the career path you want to explore to analyze your own skill progression.')
