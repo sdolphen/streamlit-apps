@@ -4,11 +4,10 @@ from pathlib import Path
 import base64
 
 # Set Streamlit to wide mode
-#st.set_page_config(layout="wide")
 st.set_page_config(
-layout="wide",
-page_title= "Career path",
-page_icon="./icons/datarootsicon.ico"
+    layout="wide",
+    page_title="Career path",
+    page_icon="./icons/datarootsicon.ico"
 )
 
 # Function to convert image to bytes
@@ -35,11 +34,11 @@ def cs_sidebar():
 def read_uploaded_file(uploaded_file):
     try:
         df = pd.read_excel(uploaded_file, sheet_name='Sheet1')
-        necessary_columns = ['dummy', 'topic', 'domain', 'subdomain']
+        necessary_columns = ['reference', 'topic', 'domain', 'subdomain']
         if all(col in df.columns for col in necessary_columns):
             return df
         else:
-            st.error("Necessary columns ('dummy', 'topic', 'domain', 'subdomain') not found in the uploaded file.")
+            st.error("Necessary columns ('reference', 'topic', 'domain', 'subdomain') not found in the uploaded file.")
             return None
     except Exception as e:
         st.error(f"An error occurred while reading the file: {e}")
@@ -47,26 +46,26 @@ def read_uploaded_file(uploaded_file):
 
 # Function to display filtered columns
 def display_filtered_columns(df, domain_prefix, display_name):
-    dummy_column = pd.to_numeric(df['dummy'], errors='coerce')
+    reference_column = pd.to_numeric(df['reference'], errors='coerce')
     topic_column = df['topic']
     domain_column = df['domain']
     subdomain_column = df['subdomain']
 
     filtered_columns = df[[col for col in df.columns if col.startswith(domain_prefix)]]
     filtered_columns = filtered_columns.copy()
-    filtered_columns.insert(0, 'dummy', dummy_column)
+    filtered_columns.insert(0, 'reference', reference_column)
     filtered_columns.insert(0, 'topic', topic_column)
     filtered_columns.insert(0, 'subdomain', subdomain_column)
 
     consulting_df = filtered_columns[domain_column == 'Consulting'].reset_index(drop=True)
     bu_skills_df = filtered_columns[domain_column == 'BU Skills'].reset_index(drop=True)
 
-    consulting_df.columns = ['subdomain', 'topic', 'dummy'] + [col[len(domain_prefix):] for col in consulting_df.columns[3:]]
-    bu_skills_df.columns = ['subdomain', 'topic', 'dummy'] + [col[len(domain_prefix):] for col in bu_skills_df.columns[3:]]
+    consulting_df.columns = ['subdomain', 'topic', 'reference'] + [col[len(domain_prefix):] for col in consulting_df.columns[3:]]
+    bu_skills_df.columns = ['subdomain', 'topic', 'reference'] + [col[len(domain_prefix):] for col in bu_skills_df.columns[3:]]
 
     def apply_conditional_color(row):
-        dummy_value = row['dummy']
-        return ['background-color: lightgreen' if isinstance(cell_value, (int, float)) and cell_value <= dummy_value else '' for cell_value in row]
+        reference_value = row['reference']
+        return ['background-color: #d3d3d3' if col_name == 'reference' else 'background-color: lightgreen' if isinstance(cell_value, (int, float)) and cell_value <= reference_value else '' for col_name, cell_value in row.items()]
 
     def add_level_prefix(val):
         try:
@@ -118,9 +117,8 @@ def main():
     if file is not None:
         df = read_uploaded_file(file)
         if df is not None:
-            st.write("Your career path is successfully uploaded!")
-
-            st.markdown("<br><br>", unsafe_allow_html=True)
+            st.code("Your career path is successfully uploaded!")
+            st.markdown("<br>", unsafe_allow_html=True)
             st.write("Let's now choose one of the career tracks in our unit to analyze our current skill progression")
 
             col1, col2, col3 = st.columns(3)
