@@ -7,7 +7,7 @@ import base64
 st.set_page_config(
     layout="wide",
     page_title="Career path",
-    page_icon="./icons/datarootsicon.ico"
+    page_icon="./dataroots-logo.png"
 )
 
 # Function to convert image to bytes
