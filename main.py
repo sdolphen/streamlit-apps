@@ -65,7 +65,7 @@ def display_filtered_columns(df, domain_prefix, display_name):
 
     def apply_conditional_color(row):
         reference_value = row['reference']
-        return ['background-color: #d3d3d3' if col_name == 'reference' else 'background-color: #18AC86' if isinstance(cell_value, (int, float)) and cell_value <= reference_value else '' for col_name, cell_value in row.items()]
+        return ['background-color: #465DAA' if col_name == 'reference' else 'background-color: #18AC86' if isinstance(cell_value, (int, float)) and cell_value <= reference_value else '' for col_name, cell_value in row.items()]
 
     def add_level_prefix(val):
         try:
@@ -117,7 +117,7 @@ def main():
     if file is not None:
         df = read_uploaded_file(file)
         if df is not None:
-            st.code("Your career path is successfully uploaded!")
+            st.code("file successfully uploaded!")
             st.markdown("<br>", unsafe_allow_html=True)
             st.write("Let's now choose one of the career tracks in our unit to analyze our current skill progression")
 
