@@ -92,7 +92,7 @@ def display_filtered_columns(df, domain_prefix, display_name):
 def main():
     cs_sidebar()
 
-    st.title("Career Path Analyzer")
+    st.title("Career Path Analyzer 2")
     st.write("Let's take a closer look at your skillmatrix and the most interesting domains to focus on in the future")
 
     st.markdown("""
