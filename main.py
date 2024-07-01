@@ -20,7 +20,7 @@ def img_to_bytes(img_path):
 def cs_sidebar():
     st.sidebar.markdown('''[<img src='data:image/png;base64,{}' class='img-fluid' width=170 height=32>](https://streamlit.io/)'''.format(img_to_bytes("dataroots-logo.png")), unsafe_allow_html=True)
     st.sidebar.header('Career path')
-    st.sidebar.markdown(''' Dear data strategist, We believe that building and nurturing our coaching culture is the most effective way to help you develop as a professional, one who provides excellent services to our clients and works closely with other colleagues. This is how we bring to life one of our Dataroots values:   ''', unsafe_allow_html=True)
+    st.sidebar.markdown(''' Dear data strategist, We believe that building and nurturing our coaching culture is the most effective way to help you develop as a professional, one who provides excellent services to our clients and works closely with other colleagues.''', unsafe_allow_html=True)
     st.sidebar.markdown('__First, complete your own skill matrix evaluation__')
     st.sidebar.code('CP - DS Self Evaluation.xlsx')
     st.sidebar.markdown('__Instructions to use the app__')
@@ -117,7 +117,7 @@ def main():
     if file is not None:
         df = read_uploaded_file(file)
         if df is not None:
-            st.code("Your career path is successfully uploaded!")
+            st.code("file successfully uploaded!")
             st.markdown("<br>", unsafe_allow_html=True)
             st.write("Let's now choose one of the career tracks in our unit to analyze our current skill progression")
 
