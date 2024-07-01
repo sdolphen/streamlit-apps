@@ -65,7 +65,7 @@ def display_filtered_columns(df, domain_prefix, display_name):
 
     def apply_conditional_color(row):
         reference_value = row['reference']
-        return ['background-color: #18AC86' if col_name == 'reference' else 'background-color: lightgreen' if isinstance(cell_value, (int, float)) and cell_value <= reference_value else '' for col_name, cell_value in row.items()]
+        return ['background-color: #d3d3d3' if col_name == 'reference' else 'background-color: #18AC86' if isinstance(cell_value, (int, float)) and cell_value <= reference_value else '' for col_name, cell_value in row.items()]
 
     def add_level_prefix(val):
         try:
